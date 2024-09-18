@@ -9,6 +9,10 @@ const Dashboard = lazy(() => import('../components/Pages/Dashboard'))
 const Usuarios = lazy(() => import('../components/Pages/Usuarios'))
 const Productos = lazy(() => import('../components/Pages/Productos'))
 const Inventario = lazy(() => import('../components/Pages/Inventario'))
+const Vehiculos = lazy(() => import('../components/Pages/Vehiculos'))
+const Predios = lazy(() => import('../components/Pages/Predios'))
+const Proveedores = lazy(() => import('../components/Pages/Proveedores'))
+const Proimpo = lazy(() => import('../components/Pages/Proimpo'))
 
 const routes = [
 	{
@@ -48,8 +52,32 @@ const routes = [
 				exact: true,
 				render: props => <RouteController component={Inventario} {...props} />
 			},
+
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/vehiculos`,
+				exact: true,
+				render: props => <RouteController component={Vehiculos} {...props} />
+			},
+
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/predios`,
+				exact: true,
+				render: props => <RouteController component={Predios} {...props} />
+			},
 			
 
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/proveedores`,
+				exact: true,
+				render: props => <RouteController component={Proveedores} {...props} />
+			},
+
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/proimpo`,
+				exact: true,
+				render: props => <RouteController component={Proimpo} {...props} />
+			},
+			
 
 
 

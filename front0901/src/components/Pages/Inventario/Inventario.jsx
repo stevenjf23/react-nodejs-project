@@ -19,7 +19,8 @@ const Inventario = () => {
         fecha_compra: "",
         fecha_vencimiento: "",
         numero_factura: "",
-        nombre_proveedor: ""
+        nombre_proveedor: "",
+        subtotal:""
     };
 
     const formatDate = (date) => {
@@ -38,6 +39,7 @@ const Inventario = () => {
     const [mensaje, setMensaje] = useState({ ident: null, message: null, type: null });
     const [idDelete, setIdDelete] = useState(null);
     const [openDialogDelete, setOpenDialogDelete] = useState(false);
+   
 
     // Función que obtiene la lista de productos
     const init = async () => {
@@ -54,6 +56,18 @@ const Inventario = () => {
             console.error('Error al obtener la lista de proveedores:', error);
         }
     };
+
+
+
+    
+
+
+
+
+
+
+
+
 
     const columns = [
         { field: 'id', headerName: 'Codigo', width: 120 },
@@ -83,6 +97,9 @@ const Inventario = () => {
             }
         },
         { field: 'numero_factura', headerName: 'Numero de Factura', width: 220 },
+        { field: 'subtotal', headerName: 'Subtotalr', width: 220 },
+
+
         {
             field: '',
             headerName: 'Acciones',
@@ -252,7 +269,8 @@ const Inventario = () => {
     // Al cargar el componente, obtenemos los productos y proveedores
     useEffect(() => {
         init();
-        fetchProveedores(); // Carga los proveedores
+        fetchProveedores();
+        // Carga los proveedores
     }, []);
 
     return (
@@ -393,6 +411,13 @@ const Inventario = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+
+            
+
+
+
+
             <Page title="FF| Inventario Productos">
                 <ToastAutoHide message={mensaje} />
                 <Container maxWidth='lg'>

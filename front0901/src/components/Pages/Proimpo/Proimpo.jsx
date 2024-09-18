@@ -8,16 +8,13 @@ import CommonTable from '../../common/CommonTable';
 import jsPDF from 'jspdf'; // Importa jsPDF
 import 'jspdf-autotable'; // Importa el plugin autotable para tablas
 
-const Usuarios = () => {
+const Proimpo = () => {
     const initialState = {
         id: "",
-        correo: "",
         nombre: "",
-        usuario: "",
-        contrasena: "",
-        descripcion: "",
-        estado: "",
-        rol: " "
+        correo: "",
+        telefono: "",
+        direccion: "",
     };
 
     const [roles, setRoles] = useState([]);
@@ -31,7 +28,7 @@ const Usuarios = () => {
     const [openDialogDelete, setOpenDialogDelete] = useState(false);
     
     const init = async () => {
-        const { data } = await ApiRequest().get('/usuarios');
+        const { data } = await ApiRequest().get('/proveedoresvvv');
         setUsuariosList(data);
     };
 
@@ -39,12 +36,11 @@ const Usuarios = () => {
 
     const columns = [
         { field: 'id', headerName: 'Codigo', width: 120 },
-        { field: 'correo', headerName: 'Correo electronico', width: 220 },
-        { field: 'nombre', headerName: 'Nombre y Apellido', width: 220 },
-        { field: 'usuario', headerName: 'Nombre de Usuario', width: 220 },
-        { field: 'contrasena', headerName: 'Contraseña', width: 220 },
-        { field: 'descripcion', headerName: 'Rol', width: 220 },
-        { field: 'estado', headerName: 'Estado', width: 220 },
+        { field: 'nombre', headerName: 'Nombre', width: 220 },
+        { field: 'correo', headerName: 'Correo', width: 220 },
+        { field: 'telefono', headerName: 'Telefono', width: 220 },
+        { field: 'direccion', headerName: 'Direccion', width: 220 },
+      
         {
             field: '',
             headerName: 'Acciones',
@@ -71,7 +67,7 @@ const Usuarios = () => {
 
     const onDelete = async () => {
         try {
-            const { data } = await ApiRequest().post('/eliminar', { id: idDelete });
+            const { data } = await ApiRequest().post('/eliminar_proveedorimpo', { id: idDelete });
             setMensaje({
                 ident: new Date().getTime(),
                 message: data.message,
@@ -106,7 +102,7 @@ const Usuarios = () => {
 
     const onSubmit = async () => {
         try {
-            const { data } = await ApiRequest().post('/guardar', body);
+            const { data } = await ApiRequest().post('/guardar_proveedorimpo', body);
             handleDialog();
             setBody(initialState);
             setMensaje({
@@ -127,7 +123,7 @@ const Usuarios = () => {
 
     const onEdit = async () => {
         try {
-            const { data } = await ApiRequest().post('/editar', body);
+            const { data } = await ApiRequest().post('/editar_proveedorimpo', body);
             handleDialog();
             setBody(initialState);
             setMensaje({
@@ -209,7 +205,7 @@ const Usuarios = () => {
         <>
             <Dialog maxWidth='xs' open={openDialogDelete} onClose={handleDialogDelete}>
                 <DialogTitle>
-                    ¿Eliminar usuario?
+                    ¿Eliminar proveedor de vehiculo?
                 </DialogTitle>
                 <DialogContent>
                     <Typography variant='h5'>Esta acción no se puede deshacer</Typography>
@@ -222,10 +218,23 @@ const Usuarios = () => {
             
             <Dialog maxWidth='xs' open={openDialog} onClose={handleDialog}>
                 <DialogTitle>
-                    {isEdit ? 'Formulario Editar Usuario' : 'Formulario Crear Usuario'}
+                    {isEdit ? 'Formulario Editar Proveedor de vehiculo' : 'Formulario Crear Proveedor de vehiculo'}
                 </DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2}>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                margin='normal'
+                                name='nombre'
+                                value={body.nombre}
+                                onChange={onChange}
+                                variant='outlined'
+                                size='small'
+                                color='primary'
+                                fullWidth
+                                label='Nombre'
+                            />
+                        </Grid>
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
@@ -242,97 +251,57 @@ const Usuarios = () => {
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
-                                name='nombre'
-                                value={body.nombre}
+                                name='telefono'
+                                value={body.telefono}
                                 onChange={onChange}
                                 variant='outlined'
                                 size='small'
                                 color='primary'
                                 fullWidth
-                                label='Nombre y Apellido'
+                                label='Telefono'
                             />
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
-                                name='usuario'
-                                value={body.usuario}
+                                name='direccion'
+                                value={body.direccion}
                                 onChange={onChange}
                                 variant='outlined'
                                 size='small'
                                 color='primary'
                                 fullWidth
-                                label='Nombre de Usuario'
+                                label='Direccion'
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <TextField
-                                margin='normal'
-                                name='contrasena'
-                                value={body.contrasena}
-                                onChange={onChange}
-                                variant='outlined'
-                                size='small'
-                                color='primary'
-                                fullWidth
-                                label='Contraseña'
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                        <InputLabel htmlFor="rol">Rol del usuario</InputLabel>
-                        <Select
-                            name="rol"
-                            value={body.rol || ''}
-                            onChange={onChange}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                        >
-                            {roles.map((rol) => (
-                                <MenuItem key={rol.id} value={rol.id}>
-                                    {rol.descripcion}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </Grid>
+                        
 
 
 
 
-                        <Grid item xs={12} sm={12}>
-                            <InputLabel htmlFor="estado">Estado de usuario</InputLabel>
-                            <Select
-                                name='estado'
-                                value={body.estado}
-                                onChange={onChange}
-                                variant='outlined'
-                                size='small'
-                                color='primary'
-                                fullWidth
-                                placeholderlabel='Estado'
-                            >
-                                <MenuItem value="Activo">Activo</MenuItem>
-                                <MenuItem value="Inactivo">Inactivo</MenuItem>
-                            </Select>
-                        </Grid>
+                        
                     </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button variant='text' color='primary' onClick={handleDialog}>Cancelar</Button>
-                    <Button variant='contained' color='primary' onClick={isEdit ? () => onEdit() : () => onSubmit()}>Guardar Usuario</Button>
+                    <Button variant='contained' color='primary' onClick={isEdit ? () => onEdit() : () => onSubmit()}>Guardar Proveedor de vehiculo</Button>
                 </DialogActions>
             </Dialog>
-            <Page title="FF| Usuarios">
+            <Page title="FF| Proveedor de Vehiculos">
                 <ToastAutoHide message={mensaje} />
                 <Container maxWidth='lg'>
                     <Box sx={{ pb: 5 }}>
-                        <Typography variant="h5">Modulo de Usuarios</Typography>
+                        <Typography variant="h5">Modulo de Proveedores de vehiculos</Typography>
                     </Box>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={3}>
-                            <Button onClick={() => {setIsEdit(false); handleDialog(); setBody(initialState);}} startIcon={<AddOutlined />} variant='contained' color='primary'> Agregar Usuario</Button>
+                            <Button onClick={() => {setIsEdit(false); handleDialog(); setBody(initialState);}} startIcon={<AddOutlined />} variant='contained' color='primary'> Agregar Proveedor de Vehiculo</Button>
                         </Grid>
                         {/* Botones de reporte de PDF con color azul más oscuro */}
+
+                        {/*
+
+
                         <Grid item xs={12} sm={3}>
                             <Button onClick={handleGenerateAllUsersReport} startIcon={<PictureAsPdfOutlined />} variant='contained' style={{ backgroundColor: '#002244', color: 'white' }}> Reporte Usuarios (Todos)</Button>
                         </Grid>
@@ -348,6 +317,10 @@ const Usuarios = () => {
                         <Grid item xs={12} sm={3}>
                             <Button onClick={handleGenerateUserUsersReport} startIcon={<PictureAsPdfOutlined />} variant='contained' style={{ backgroundColor: '#002244', color: 'white' }}> Reporte Usuarios (User)</Button>
                         </Grid>
+                        */}
+
+
+
                         <Grid item xs={12} sm={12}>
                             <CommonTable data={usuariosList} columns={columns} />
                         </Grid>
@@ -358,4 +331,4 @@ const Usuarios = () => {
     );
 }
 
-export default Usuarios;
+export default Proimpo;
