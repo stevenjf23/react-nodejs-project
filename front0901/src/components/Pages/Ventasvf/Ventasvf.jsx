@@ -414,7 +414,7 @@ const Ventasvf = () => {
                     
                     <Grid item xs={12}>
                         <Button variant='contained' color='primary' onClick={isEdit ? onEdit : onSubmit}>
-                            {isEdit ? 'Editar Producto' : 'Crear Producto'}
+                            {isEdit ? 'Editar Venta' : 'Realizar Venta'}
                         </Button>
                     </Grid>
                 </Grid>
