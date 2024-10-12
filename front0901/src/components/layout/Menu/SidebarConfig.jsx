@@ -52,7 +52,28 @@ const sidebarConfig = [
 		title: 'Inventario Vehiculos',
 		path: '/app/predios',
 		icon: <CommuteOutlined /> // Cambiado a un icono de inventario
+	},
+	{
+		title: 'Venta de Vehiculos',
+		path: '/app/ventasvf',
+		icon: <CommuteOutlined /> // Cambiado a un icono de inventario
+	},
+	{
+		title: 'Venta de Servicios',
+		path: '/app/ventassf',
+		icon: <CommuteOutlined /> // Cambiado a un icono de inventario
+	},
+	{
+		title: 'Registro Vehiculos vendidos',
+		path: '/app/registrov',
+		icon: <CommuteOutlined /> // Cambiado a un icono de inventario
+	},
+	{
+		title: 'Registro Servicios vendidos',
+		path: '/app/registros',
+		icon: <CommuteOutlined /> // Cambiado a un icono de inventario
 	}
+
 	
 
 	

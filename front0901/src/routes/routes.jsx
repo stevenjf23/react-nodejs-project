@@ -13,6 +13,8 @@ const Vehiculos = lazy(() => import('../components/Pages/Vehiculos'))
 const Predios = lazy(() => import('../components/Pages/Predios'))
 const Proveedores = lazy(() => import('../components/Pages/Proveedores'))
 const Proimpo = lazy(() => import('../components/Pages/Proimpo'))
+const Ventasvf = lazy(() => import('../components/Pages/Ventasvf'))
+const Registrov = lazy(() => import('../components/Pages/Registrov'))
 
 const routes = [
 	{
@@ -74,6 +76,27 @@ const routes = [
 
 			{
 				path: `/${APP_VALUES.ROOT_ROUTE}/proimpo`,
+				exact: true,
+				render: props => <RouteController component={Proimpo} {...props} />
+			},
+
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/ventasvf`,
+				exact: true,
+				render: props => <RouteController component={Ventasvf} {...props} />
+			},
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/ventassf`,
+				exact: true,
+				render: props => <RouteController component={Proimpo} {...props} />
+			},
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/registrov`,
+				exact: true,
+				render: props => <RouteController component={Registrov} {...props} />
+			},
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/registros`,
 				exact: true,
 				render: props => <RouteController component={Proimpo} {...props} />
 			},

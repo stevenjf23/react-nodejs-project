@@ -10,13 +10,13 @@ import 'jspdf-autotable'; // Importa el plugin "autotable" de jsPDF, que facilit
 
 
 
-const Predios = () => {
+const Registrov = () => {
 
 
     const initialState = {// Define el estado inicial del componente Predios
         id: "",	// Identificador único del vehículo (probablemente una clave primaria).
         codigo: "",
-        placa:"",// Número de placa del vehículo.
+        placa: "",// Número de placa del vehículo.
         tipo_vehiculo:"",// Tipo de vehículo (automóvil, motocicleta, etc.).
         marca: "",	// Marca del vehículo (por ejemplo, Toyota, Ford).
         modelo: "",	// Modelo del vehículo (por ejemplo, Corolla, Mustang).
@@ -32,9 +32,9 @@ const Predios = () => {
         cilindros:"",// Número de cilindros del motor.
         c_c:"",	// Cilindrada o capacidad cúbica del motor.
         id_proveedor_vehiculo: "",// Identificación del proveedor o vendedor del vehículo.
-        fecha_compra: "",	// Fecha en que el vehículo fue adquirido.
+        fecha_venta: "",	// Fecha en que el vehículo fue adquirido.
         precio_compra: "",	// Precio de compra del vehículo.
-        precio_vehiculo: ""// Valor estimado o actual del vehículo.
+        precio_venta: ""// Valor estimado o actual del vehículo.
     };
 
 
@@ -91,7 +91,7 @@ const Predios = () => {
     const init = async () => {
         // Realiza una solicitud GET a la API para obtener la lista de vehículos.
         // Usa la instancia personalizada de axios (`ApiRequest()`) para hacer la solicitud al endpoint '/vehiculos'.
-        const { data } = await ApiRequest().get('/vehiculos');
+        const { data } = await ApiRequest().get('/vehiculosventas');
         // Una vez que se obtiene la respuesta, se extrae la propiedad `data` (que contiene la lista de vehículos).
         // Se actualiza el estado 'usuariosList' con los datos obtenidos de la API.
         setUsuariosList(data);
@@ -113,7 +113,7 @@ const Predios = () => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 120 }, // Columna que muestra el ID (código único) del vehículo. Tiene un ancho de 120 píxeles.
-        { field: 'codigo', headerName: 'Codigo', width: 220 },
+        { field: 'Codigo', headerName: 'Codigo', width: 120 },
         { field: 'placa', headerName: 'Placa', width: 220 }, // Columna que muestra la placa del vehículo. El ancho de la columna es de 220 píxeles.
         { field: 'tipo_vehiculo', headerName: 'Tipo vehiculo', width: 220 }, // Columna que muestra el tipo de vehículo (por ejemplo, auto, moto, camión). Ancho de 220 píxeles.
         { field: 'marca', headerName: 'Marca', width: 220 }, // Columna que muestra la marca del vehículo. Tiene un ancho de 220 píxeles.
@@ -136,8 +136,8 @@ const Predios = () => {
         // - 'valueFormatter': es una función que formatea la fecha de compra a un formato de fecha local en español (dd/mm/aaaa).
         //   Usa el método `toLocaleDateString` para mostrar la fecha con formato numérico para día, mes y año.
         {
-            field: 'fecha_compra',
-            headerName: 'Fecha Compra',
+            field: 'fecha_venta',
+            headerName: 'Fecha Venta',
             width: 220,
             valueFormatter: (params) => {
                 const fecha = new Date(params.value);
@@ -154,7 +154,7 @@ const Predios = () => {
         // - 'field': 'precio_vehiculo' se refiere al campo que contiene el precio del vehículo.
         // - 'headerName': 'Precio de Vehículo' es el título que aparecerá en la columna.
         // - 'width': Establece el ancho de la columna en 220px.
-        { field: 'precio_vehiculo', headerName: 'Precio de Vehiculo', width: 220 },
+        { field: 'precio_venta', headerName: 'Precio de Venta', width: 220 },
         // Columna especial que renderiza acciones (botones de edición y eliminación).
         // - 'field': Se deja vacío porque no se asocia a un campo específico de los datos.
         // - 'headerName': 'Acciones' es el título que aparece en la columna, indicando que aquí se muestran las acciones.
@@ -190,7 +190,7 @@ const Predios = () => {
 
     const onDelete = async () => {
         try {
-            const { data } = await ApiRequest().post('/eliminar_vehic', { id: idDelete });// Se realiza una solicitud POST a la API para eliminar un vehículo, enviando el ID del vehículo a eliminar.
+            const { data } = await ApiRequest().post('/eliminar_vehicv', { id: idDelete });// Se realiza una solicitud POST a la API para eliminar un vehículo, enviando el ID del vehículo a eliminar.
             setMensaje({// Si la eliminación es exitosa, se muestra un mensaje de éxito en una notificación.
                 ident: new Date().getTime(),// Genera un identificador único basado en la fecha actual.
                 message: data.message,// Mensaje que llega desde el servidor, probablemente indicando que el vehículo fue eliminado exitosamente.
@@ -237,7 +237,7 @@ const Predios = () => {
 
     const onSubmit = async () => {
         try {
-            const { data } = await ApiRequest().post('/guardar_vehic', body);  // Realiza una solicitud POST a la API para guardar un nuevo vehículo, enviando el objeto 'body' como datos.
+            const { data } = await ApiRequest().post('/guardar_vehicv', body);  // Realiza una solicitud POST a la API para guardar un nuevo vehículo, enviando el objeto 'body' como datos.
             handleDialog();// Cierra el diálogo de formulario después de la operación.
             setBody(initialState);// Reinicia el estado 'body' a su valor inicial para limpiar el formulario.
             setMensaje({ // Muestra un mensaje de éxito al usuario, indicando que el vehículo fue guardado correctamente.
@@ -260,7 +260,7 @@ const Predios = () => {
 
     const onEdit = async () => {
         try {
-            const { data } = await ApiRequest().post('/editar_vehic', body); // Realiza una solicitud POST a la API para editar un vehículo existente, enviando el objeto 'body' como datos.
+            const { data } = await ApiRequest().post('/editar_vehicv', body); // Realiza una solicitud POST a la API para editar un vehículo existente, enviando el objeto 'body' como datos.
             handleDialog();// Cierra el diálogo de formulario después de la operación.
             setBody(initialState); // Reinicia el estado 'body' a su valor inicial para limpiar el formulario.
             setMensaje({// Muestra un mensaje de éxito al usuario, indicando que el vehículo fue editado correctamente.
@@ -306,9 +306,9 @@ const Predios = () => {
                 product.cilindros,
                 product.c_c,
                 product.nombre_proveedor_vehiculo,
-                formatDate(product.fecha_compra), // Formatea la fecha de compra antes de agregarla a la tabla.
+                formatDate(product.fecha_venta), // Formatea la fecha de compra antes de agregarla a la tabla.
                 product.precio_compra, 
-                product.precio_vehiculo,     
+                product.precio_venta,     
             ])
         });
         doc.save('reporte_inventario_vehiculos.pdf');// Guarda el PDF generado con el nombre 'reporte_inventario_vehiculos.pdf'.
@@ -372,7 +372,7 @@ const generatePDFIAA = () => {
     doc.text("Reporte de Vehículos - IAA", 20, 10);// Añade un título al PDF en la posición (20, 10).
     doc.autoTable({// Utiliza el plugin autotable para agregar una tabla al PDF.
         // Define la cabecera de la tabla con los nombres de los campos relevantes.
-        head: [['ID', 'Placa', 'Tipo vehiculo', 'Marca', 'Modelo', 'Color', 'Uso', 'Linea', 'Chasis', 'Serie', 'Numero asientos', 'Ejes', 'Numero vin', 'Motor', 'Cilindros', 'c_c', 'Proveedor', 'Fecha compra', 'Precio compra', 'Precio vehiculo']],
+        head: [['ID', 'Placa', 'Tipo vehiculo', 'Marca', 'Modelo', 'Color', 'Uso', 'Linea', 'Chasis', 'Serie', 'Numero asientos', 'Ejes', 'Numero vin', 'Motor', 'Cilindros', 'c_c', 'Proveedor', 'Fecha venta', 'Precio compra', 'Precio venta']],
         // El cuerpo de la tabla se llena con los datos de los vehículos filtrados de IAA.
         body: vehiculosIAA.map(vehicle => [
             vehicle.id, 
@@ -391,9 +391,9 @@ const generatePDFIAA = () => {
             vehicle.cilindros,
             vehicle.c_c, 
             vehicle.nombre_proveedor_vehiculo,
-            formatDate(vehicle.fecha_compra),// Formatea la fecha de compra antes de agregarla a la tabla.
+            formatDate(vehicle.fecha_venta),// Formatea la fecha de compra antes de agregarla a la tabla.
             vehicle.precio_compra, 
-            vehicle.precio_vehiculo
+            vehicle.precio_venta
         ])
     });
     doc.save('reporte_vehiculos_IAA.pdf');// Guarda el PDF generado con el nombre 'reporte_vehiculos_IAA.pdf'.
@@ -408,7 +408,7 @@ const generatePDFAutowini = () => {
     doc.text("Reporte de Vehículos - Autowini", 20, 10);// Añade un título al PDF en la posición (20, 10).
     doc.autoTable({// Utiliza el plugin autotable para agregar una tabla al PDF.
        // Define la cabecera de la tabla con los nombres de los campos relevantes.
-        head: [['ID', 'Placa', 'Tipo vehiculo', 'Marca', 'Modelo', 'Color', 'Uso', 'Linea', 'Chasis', 'Serie', 'Numero asientos', 'Ejes', 'Numero vin', 'Motor', 'Cilindros', 'c_c', 'Proveedor', 'Fecha compra', 'Precio compra', 'Precio vehiculo']],
+        head: [['ID', 'Placa', 'Tipo vehiculo', 'Marca', 'Modelo', 'Color', 'Uso', 'Linea', 'Chasis', 'Serie', 'Numero asientos', 'Ejes', 'Numero vin', 'Motor', 'Cilindros', 'c_c', 'Proveedor', 'Fecha venta', 'Precio compra', 'Precio venta']],
          // El cuerpo de la tabla se llena con los datos de los vehículos filtrados de Autowini.
         body: vehiculosAutowini.map(vehicle => [
             vehicle.id, 
@@ -427,9 +427,9 @@ const generatePDFAutowini = () => {
             vehicle.cilindros,
             vehicle.c_c,   
             vehicle.nombre_proveedor_vehiculo,
-            formatDate(vehicle.fecha_compra),// Formatea la fecha de compra antes de agregarla a la tabla.
+            formatDate(vehicle.fecha_venta),// Formatea la fecha de compra antes de agregarla a la tabla.
             vehicle.precio_compra, 
-            vehicle.precio_vehiculo
+            vehicle.precio_venta
         ])
     });
     doc.save('reporte_vehiculos_Autowini.pdf');// Guarda el PDF generado con el nombre 'reporte_vehiculos_Autowini.pdf'.
@@ -463,7 +463,6 @@ const generatePDFAutowini = () => {
                 <DialogContent>
                     <Grid container spacing={2}>
 
-                    
                     <Grid item xs={12} sm={6}>
                         <TextField
                             margin='normal'
@@ -476,6 +475,8 @@ const generatePDFAutowini = () => {
                             label='Codigo'
                         />
                     </Grid>
+
+                    
                     
                     
                     <Grid item xs={12} sm={6}>
@@ -707,13 +708,13 @@ const generatePDFAutowini = () => {
                         <TextField
                             type='date'
                             margin='normal'
-                            name='fecha_compra'
-                            value={formatDate(body.fecha_compra)}
+                            name='fecha_venta'
+                            value={formatDate(body.fecha_venta)}
                             onChange={onChange}
                             variant='outlined'
                             size='small'
                             fullWidth
-                            label='Fecha Compra'
+                            label='Fecha Venta'
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -741,13 +742,13 @@ const generatePDFAutowini = () => {
                     <Grid item xs={12} sm={6}>
                         <TextField
                             margin='normal'
-                            name='precio_vehiculo'
-                            value={body.precio_vehiculo}
+                            name='precio_venta'
+                            value={body.precio_venta}
                             onChange={onChange}
                             variant='outlined'
                             size='small'
                             fullWidth
-                            label='Precio Vehiculo'
+                            label='Precio Venta'
                         />
                     </Grid>
 
@@ -774,11 +775,11 @@ const generatePDFAutowini = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Page title="FF| Inventario Vehiculos">
+            <Page title="FF| Registro Vehiculos Vendidos">
                 <ToastAutoHide message={mensaje} />
                 <Container maxWidth='lg'>
                     <Box sx={{ pb: 5 }}>
-                        <Typography variant="h5">Modulo de Inventario Vehiculos</Typography>
+                        <Typography variant="h5">Registro Vehiculos Vendidos</Typography>
                     </Box>
                     <Grid container spacing={2}>
 
@@ -828,4 +829,4 @@ const generatePDFAutowini = () => {
     );
 }
 
-export default Predios;
+export default Registrov;

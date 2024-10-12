@@ -1,150 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Container, Typography, Grid, Box, Button, Stack, Avatar, IconButton, Divider, MenuItem, Select, InputLabel } from '@mui/material';
-import ApiRequest from '../../../helpers/axiosInstances';
-import { AddOutlined, EditOutlined, DeleteOutline, PictureAsPdfOutlined } from '@mui/icons-material'; // Importa el ícono para el PDF
-import Page from '../../common/Page';
-import ToastAutoHide from '../../common/ToastAutoHide';
-import CommonTable from '../../common/CommonTable';
-import jsPDF from 'jspdf'; // Importa jsPDF
-import 'jspdf-autotable'; // Importa el plugin autotable para tablas
+import React, { useState, useEffect } from 'react';// Importación de dependencias de React
+import { TextField, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Container, Typography, Grid, Box, Button, Stack, Avatar, IconButton, Divider, MenuItem, Select, InputLabel } from '@mui/material';// Importación de componentes y utilidades de Material-UI
+import ApiRequest from '../../../helpers/axiosInstances';// Importación de la instancia configurada de Axios para hacer solicitudes HTTP
+import { AddOutlined, EditOutlined, DeleteOutline, PictureAsPdfOutlined } from '@mui/icons-material'; // Importación de iconos de Material-UI para agregar, editar, eliminar, y exportar en PDF
+import Page from '../../common/Page';// Importación de un componente de página común
+import ToastAutoHide from '../../common/ToastAutoHide';// Componente para mostrar notificaciones que se ocultan automáticamente
+import CommonTable from '../../common/CommonTable';// Importación de una tabla común para la visualización de datos
+import jsPDF from 'jspdf'; // Importación de la biblioteca jsPDF para generar archivos PDF
+import 'jspdf-autotable'; // Importación del plugin 'autotable' para generar tablas dentro de archivos PDF
 
-const Proveedores = () => {
+
+
+const Proveedores = () => { // Definición del estado inicial para un proveedor
+
+
+
     const initialState = {
-        id: "",
-        nombre: "",
-        correo: "",
-        telefono: "",
-        direccion: "",
+        id: "", // Identificador único del proveedor
+        nombre: "", // Nombre del proveedor
+        correo: "", // Correo electrónico del proveedor
+        telefono: "", // Número de teléfono del proveedor
+        direccion: "", // Dirección física del proveedor
     };
 
-    const [roles, setRoles] = useState([]);
-    
-    const [usuariosList, setUsuariosList] = useState([]);
-    const [body, setBody] = useState(initialState);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [mensaje, setMensaje] = useState({ ident: null, message: null, type: null });
-    const [idDelete, setIdDelete] = useState(null);
-    const [openDialogDelete, setOpenDialogDelete] = useState(false);
+
+
+    // Definición de los diferentes estados que manejará el componente
+    const [roles, setRoles] = useState([]);// Estado para almacenar la lista de roles
+    const [usuariosList, setUsuariosList] = useState([]);// Estado para almacenar la lista de usuarios (proveedores)
+    const [body, setBody] = useState(initialState);// Estado que almacena los datos del proveedor actual, inicializado con 'initialState'
+    const [openDialog, setOpenDialog] = useState(false);// Estado para controlar la visibilidad del diálogo (modal) para agregar/editar proveedores
+    const [isEdit, setIsEdit] = useState(false);// Estado booleano que indica si se está editando un proveedor existente o creando uno nuevo
+    const [mensaje, setMensaje] = useState({ ident: null, message: null, type: null });// Estado para mostrar mensajes de éxito o error en la UI
+    const [idDelete, setIdDelete] = useState(null);// Estado que almacena el ID del proveedor a eliminar
+    const [openDialogDelete, setOpenDialogDelete] = useState(false);// Estado para controlar la visibilidad del diálogo de confirmación para eliminar proveedores
+
+
     
     const init = async () => {
-        const { data } = await ApiRequest().get('/proveedoresp');
-        setUsuariosList(data);
+        const { data } = await ApiRequest().get('/proveedoresp');// Llama a la API para obtener la lista de proveedores
+        setUsuariosList(data);// Actualiza el estado 'usuariosList' con los datos obtenidos de la API
     };
 
 
 
     const columns = [
-        { field: 'id', headerName: 'Codigo', width: 120 },
-        { field: 'nombre', headerName: 'Nombre', width: 220 },
-        { field: 'correo', headerName: 'Correo', width: 220 },
-        { field: 'telefono', headerName: 'Telefono', width: 220 },
-        { field: 'direccion', headerName: 'Direccion', width: 220 },
-      
+        { field: 'id', headerName: 'Codigo', width: 120 },// Columna para el ID del proveedor, con un ancho de 120px
+        { field: 'nombre', headerName: 'Nombre', width: 220 },// Columna para el nombre del proveedor, con un ancho de 220px
+        { field: 'correo', headerName: 'Correo', width: 220 },// Columna para el correo del proveedor, con un ancho de 220px
+        { field: 'telefono', headerName: 'Telefono', width: 220 },// Columna para el teléfono del proveedor, con un ancho de 220px
+        { field: 'direccion', headerName: 'Direccion', width: 220 },// Columna para la dirección del proveedor, con un ancho de 220px
+        // Columna para las acciones, como editar y eliminar, con un ancho de 200px
         {
             field: '',
             headerName: 'Acciones',
             width: 200,
             renderCell: (params) => (
+                // Contenedor de las acciones en forma de Stack para disponer los íconos horizontalmente
                 <Stack direction='row' divider={<Divider orientation="vertical" flexItem />} justifyContent="center" alignItems="center" spacing={2}>
+                    {/* Botón para editar un proveedor */}
                     <IconButton size='small' onClick={() => {
-                        setIsEdit(true);
-                        setBody(params.row);
-                        handleDialog();
+                        setIsEdit(true);// Activa el modo de edición
+                        setBody(params.row); // Pasa los datos del proveedor seleccionado al formulario (body)
+                        handleDialog();// Abre el diálogo para editar
                     }}>
-                        <EditOutlined />
+                        <EditOutlined />{/* Ícono de edición */}
                     </IconButton>
+                    {/* Botón para eliminar un proveedor */}
                     <IconButton size='small' onClick={() => {
-                        handleDialogDelete();
-                        setIdDelete(params.id);
+                        handleDialogDelete();// Abre el diálogo de confirmación para eliminar
+                        setIdDelete(params.id);// Almacena el ID del proveedor seleccionado para eliminarlo
                     }}>
-                        <DeleteOutline />
+                        <DeleteOutline />{/* Ícono de eliminación */}
                     </IconButton>
                 </Stack>
             )
         }
     ];
 
+
+
     const onDelete = async () => {
         try {
-            const { data } = await ApiRequest().post('/eliminar_proveedorp', { id: idDelete });
-            setMensaje({
-                ident: new Date().getTime(),
-                message: data.message,
-                type: 'success'
+            const { data } = await ApiRequest().post('/eliminar_proveedorp', { id: idDelete });// Llama a la API para eliminar el proveedor usando el ID almacenado en 'idDelete'
+            setMensaje({ // Actualiza el mensaje de éxito con los datos de la respuesta de la API
+                ident: new Date().getTime(),// Identificador único para forzar la actualización del mensaje
+                message: data.message,// Mensaje de éxito devuelto por la API
+                type: 'success'// Tipo de mensaje: éxito
             });
-            handleDialogDelete();
-            init();
+            handleDialogDelete();// Cierra el diálogo de confirmación de eliminación
+            init();// Vuelve a cargar la lista de proveedores
         } catch ({ response }) {
-            setMensaje({
-                ident: new Date().getTime(),
-                message: response.data.sqlMessage,
-                type: 'error'
+            setMensaje({// Si ocurre un error, actualiza el mensaje con el error devuelto por la API
+                ident: new Date().getTime(),// Identificador único para forzar la actualización del mensaje
+                message: response.data.sqlMessage,// Mensaje de error devuelto por la API
+                type: 'error'// Tipo de mensaje: error
             });
         }
     };
 
-    const handleDialog = () => {
-        setOpenDialog(prev => !prev);
+
+
+    const handleDialog = () => {// Función para abrir/cerrar el diálogo de creación/edición de proveedor
+        setOpenDialog(prev => !prev);// Cambia el estado de `openDialog` a su valor opuesto (abrir/cerrar)
     };
 
-    const handleDialogDelete = () => {
-        setOpenDialogDelete(prev => !prev);
+
+
+    const handleDialogDelete = () => {// Función para abrir/cerrar el diálogo de confirmación de eliminación de proveedor
+        setOpenDialogDelete(prev => !prev);// Cambia el estado de `openDialogDelete` a su valor opuesto (abrir/cerrar)
     };
 
-    const onChange = ({ target }) => {
-        const { name, value } = target;
+
+
+    const onChange = ({ target }) => {// Función que actualiza los campos del formulario de proveedor cuando se cambian
+        const { name, value } = target;// Extrae el nombre y el valor del campo modificado
         setBody({
-            ...body,
-            [name]: value
+            ...body,// Mantiene el estado actual de `body`
+            [name]: value// Actualiza el campo con el nuevo valor
         });
     };
 
-    const onSubmit = async () => {
-        try {
-            const { data } = await ApiRequest().post('/guardar_proveedorp', body);
-            handleDialog();
-            setBody(initialState);
-            setMensaje({
-                ident: new Date().getTime(),
-                message: data.message,
-                type: 'success'
-            });
-            init();
-            setIsEdit(false);
-        } catch ({ response }) {
-            setMensaje({
-                ident: new Date().getTime(),
-                message: response.data.sqlMessage,
-                type: 'error'
-            });
-        }
-    };
 
-    const onEdit = async () => {
+
+    const onSubmit = async () => {// Función para enviar los datos del formulario de creación de proveedor
         try {
-            const { data } = await ApiRequest().post('/editar_proveedorp', body);
-            handleDialog();
-            setBody(initialState);
+            const { data } = await ApiRequest().post('/guardar_proveedorp', body);// Realiza una solicitud POST para guardar el nuevo proveedor
+            handleDialog();// Cierra el diálogo de creación/edición
+            setBody(initialState);// Reinicia el formulario con el estado inicial vacío
             setMensaje({
-                ident: new Date().getTime(),
-                message: data.message,
-                type: 'success'
+                ident: new Date().getTime(),// Identificador único para el mensaje
+                message: data.message,// Mensaje de éxito recibido del servidor
+                type: 'success'// Tipo de mensaje (éxito)
             });
-            init();
+            init();// Refresca la lista de proveedores para mostrar los cambios
+            setIsEdit(false);// Asegura que no esté en modo edición
         } catch ({ response }) {
-            setMensaje({
+            setMensaje({// En caso de error, muestra un mensaje de error
                 ident: new Date().getTime(),
-                message: response.data.sqlMessage,
-                type: 'error'
+                message: response.data.sqlMessage,// Mensaje de error recibido del servidor
+                type: 'error'// Tipo de mensaje (error)
             });
         }
     };
 
 
 
+    const onEdit = async () => {    // Función para enviar los datos del formulario de edición de proveedor
+        try {
+            const { data } = await ApiRequest().post('/editar_proveedorp', body);// Realiza una solicitud POST para actualizar el proveedor existente
+            handleDialog();// Cierra el diálogo de creación/edición
+            setBody(initialState);// Reinicia el formulario con el estado inicial vacío
+            setMensaje({
+                ident: new Date().getTime(),// Identificador único para el mensaje
+                message: data.message,// Mensaje de éxito recibido del servidor
+                type: 'success'// Tipo de mensaje (éxito)
+            });
+            init();// Refresca la lista de proveedores para mostrar los cambios
+        } catch ({ response }) {
+            setMensaje({// En caso de error, muestra un mensaje de error
+                ident: new Date().getTime(),
+                message: response.data.sqlMessage,// Mensaje de error recibido del servidor
+                type: 'error'// Tipo de mensaje (error)
+            });
+        }
+    };
 
-    
+
+
+    //REPORTES QUE NO SE UTILIZARON
     // Función para generar el reporte PDF con todos los usuarios
     const generatePDF = (usuarios, title) => {
         const doc = new jsPDF();
@@ -196,38 +219,47 @@ const Proveedores = () => {
 
 
    
-    useEffect(() => {
-        fetchRoles(); // Fetch marca options when the component mounts.
-        init();
-    }, []);
+    useEffect(() => {// useEffect es un hook de React que se ejecuta después de que el componente se monte
+        fetchRoles(); // Llama a la función fetchRoles para obtener la lista de roles cuando el componente se monta.
+        init();// Llama a la función init para cargar la lista de proveedores cuando el componente se monta.
+    }, []);// El arreglo vacío [] indica que este efecto solo se ejecutará una vez, al montar el componente.
 
-    return (
+    
+
+    return (// Componente JSX que define la estructura de la UI y las interacciones del módulo Proveedores de Productos
         <>
+         {/* Diálogo para confirmar la eliminación de un proveedor */}
             <Dialog maxWidth='xs' open={openDialogDelete} onClose={handleDialogDelete}>
                 <DialogTitle>
                     ¿Eliminar usuario?
                 </DialogTitle>
                 <DialogContent>
-                    <Typography variant='h5'>Esta acción no se puede deshacer</Typography>
+                    <Typography variant='h5'>Esta acción no se puede deshacer</Typography>{/* Mensaje de advertencia */}
                 </DialogContent>
                 <DialogActions>
+                    {/* Botón para cancelar la acción de eliminación */}
                     <Button variant='text' color='primary' onClick={handleDialogDelete}>Cancelar</Button>
+                    {/* Botón para confirmar la eliminación */}
                     <Button variant='contained' color='primary' onClick={onDelete}>Aceptar</Button>
                 </DialogActions>
             </Dialog>
-            
+            {/* Diálogo para crear o editar un proveedor */}
             <Dialog maxWidth='xs' open={openDialog} onClose={handleDialog}>
                 <DialogTitle>
+                     {/* Título dinámico dependiendo de si se está editando o creando un proveedor */}
                     {isEdit ? 'Formulario Editar Proveedor' : 'Formulario Crear Proveedor'}
                 </DialogTitle>
+                
                 <DialogContent>
                     <Grid container spacing={2}>
+                        
+                         {/* Campo de texto para el nombre del proveedor */}
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
                                 name='nombre'
-                                value={body.nombre}
-                                onChange={onChange}
+                                value={body.nombre}// Valor actual del campo
+                                onChange={onChange}// Manejador para actualizar el estado
                                 variant='outlined'
                                 size='small'
                                 color='primary'
@@ -235,6 +267,8 @@ const Proveedores = () => {
                                 label='Nombre'
                             />
                         </Grid>
+                        
+                        {/* Campo de texto para el correo electrónico del proveedor */}
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
@@ -248,6 +282,8 @@ const Proveedores = () => {
                                 label='Correo Electronico'
                             />
                         </Grid>
+                        
+                        {/* Campo de texto para el teléfono del proveedor */}
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
@@ -261,6 +297,8 @@ const Proveedores = () => {
                                 label='Telefono'
                             />
                         </Grid>
+                        
+                        {/* Campo de texto para la dirección del proveedor */}
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
@@ -274,29 +312,37 @@ const Proveedores = () => {
                                 label='Direccion'
                             />
                         </Grid>
-                        
-
-
-
-
-                        
+    
                     </Grid>
                 </DialogContent>
+                {/* Acciones del diálogo */}
                 <DialogActions>
+                    {/* Botón para cancelar la creación/edición */}
                     <Button variant='text' color='primary' onClick={handleDialog}>Cancelar</Button>
+                    {/* Botón para guardar el proveedor (editado o nuevo) */}
                     <Button variant='contained' color='primary' onClick={isEdit ? () => onEdit() : () => onSubmit()}>Guardar Proveedor Producto</Button>
                 </DialogActions>
             </Dialog>
+            
+            {/* Página principal del módulo Proveedores de Productos */}
             <Page title="FF| Proveedor Productos">
+                {/* Componente para mostrar mensajes emergentes (toasts) */}
                 <ToastAutoHide message={mensaje} />
+                {/* Contenedor principal */}
                 <Container maxWidth='lg'>
                     <Box sx={{ pb: 5 }}>
+                        {/* Título del módulo */}
                         <Typography variant="h5">Modulo de Proveedores Productos</Typography>
                     </Box>
+                    {/* Botón para agregar un nuevo proveedor */}
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={3}>
                             <Button onClick={() => {setIsEdit(false); handleDialog(); setBody(initialState);}} startIcon={<AddOutlined />} variant='contained' color='primary'> Agregar Proveedor de productos</Button>
                         </Grid>
+
+
+
+
                         {/* Botones de reporte de PDF con color azul más oscuro */}
 
                         {/*
@@ -321,8 +367,10 @@ const Proveedores = () => {
 
 
 
+
+                        {/* Componente que muestra la tabla de proveedores */}
                         <Grid item xs={12} sm={12}>
-                            <CommonTable data={usuariosList} columns={columns} />
+                            <CommonTable data={usuariosList} columns={columns} />{/* Tabla que recibe datos y columnas */}
                         </Grid>
                     </Grid>
                 </Container>
@@ -331,4 +379,4 @@ const Proveedores = () => {
     );
 }
 
-export default Proveedores;
+export default Proveedores;// Exportación del componente Proveedores para que pueda ser utilizado en otras partes de la aplicación

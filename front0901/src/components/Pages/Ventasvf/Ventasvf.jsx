@@ -4,11 +4,11 @@ import ApiRequest from '../../../helpers/axiosInstances';
 import Page from '../../common/Page';
 import ToastAutoHide from '../../common/ToastAutoHide';
 
-const Vehiculos = () => {
+const Ventasvf = () => {
     const initialState = {
     
             id: "",	
-            codigo: "",
+            codigo:"",
             placa:"",
             tipo_vehiculo:"",
             marca: "",	
@@ -26,9 +26,9 @@ const Vehiculos = () => {
             c_c:"",	
             
             id_proveedor_vehiculo: "",
-            fecha_compra: "",	
+            fecha_venta: "",	
             precio_compra: "",	
-            precio_vehiculo: ""	
+            precio_venta: ""	
     };
 
     // Modificación para evitar desfase por zona horaria
@@ -68,7 +68,7 @@ const Vehiculos = () => {
 
     const onSubmit = async () => {
         try {
-            const { data } = await ApiRequest().post('/guardar_vehic', body);
+            const { data } = await ApiRequest().post('/guardar_vehicv', body);
             setMensaje({
                 ident: new Date().getTime(),
                 message: data.message,
@@ -87,7 +87,7 @@ const Vehiculos = () => {
 
     const onEdit = async () => {
         try {
-            const { data } = await ApiRequest().post('/editar_vehic', body);
+            const { data } = await ApiRequest().post('/editar_vehicv', body);
             setMensaje({
                 ident: new Date().getTime(),
                 message: data.message,
@@ -117,6 +117,7 @@ const Vehiculos = () => {
                 </Box>
                 <Grid container spacing={2}>
 
+                
                 <Grid item xs={12} sm={6}>
                         <TextField
                             margin='normal'
@@ -129,8 +130,9 @@ const Vehiculos = () => {
                             label='Codigo'
                         />
                     </Grid>
-               
-               
+                
+                
+                
                 <Grid item xs={12} sm={6}>
                         <TextField
                             margin='normal'
@@ -360,13 +362,13 @@ const Vehiculos = () => {
                         <TextField
                             type='date'
                             margin='normal'
-                            name='fecha_compra'
-                            value={formatDate(body.fecha_compra)}
+                            name='fecha_venta'
+                            value={formatDate(body.fecha_venta)}
                             onChange={onChange}
                             variant='outlined'
                             size='small'
                             fullWidth
-                            label='Fecha Compra'
+                            label='Fecha Venta'
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -394,13 +396,13 @@ const Vehiculos = () => {
                     <Grid item xs={12} sm={6}>
                         <TextField
                             margin='normal'
-                            name='precio_vehiculo'
-                            value={body.precio_vehiculo}
+                            name='precio_venta'
+                            value={body.precio_venta}
                             onChange={onChange}
                             variant='outlined'
                             size='small'
                             fullWidth
-                            label='Precio Vehiculo'
+                            label='Precio Venta'
                         />
                     </Grid>
 
@@ -421,4 +423,4 @@ const Vehiculos = () => {
     );
 };
 
-export default Vehiculos;
+export default Ventasvf;
