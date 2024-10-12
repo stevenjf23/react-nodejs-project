@@ -72,6 +72,11 @@ const sidebarConfig = [
 		title: 'Registro Servicios vendidos',
 		path: '/app/registros',
 		icon: <CommuteOutlined /> // Cambiado a un icono de inventario
+	},
+	{
+		title: 'Clientes Vehiculos',
+		path: '/app/clientes',
+		icon: <CommuteOutlined /> // Cambiado a un icono de inventario
 	}
 
 	

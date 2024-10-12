@@ -100,6 +100,11 @@ const routes = [
 				exact: true,
 				render: props => <RouteController component={Proimpo} {...props} />
 			},
+			{
+				path: `/${APP_VALUES.ROOT_ROUTE}/clientes`,
+				exact: true,
+				render: props => <RouteController component={Clientes} {...props} />
+			},
 			
 
 
