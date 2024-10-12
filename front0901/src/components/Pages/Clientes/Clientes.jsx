@@ -35,7 +35,7 @@ const Clientes = () => { // Define el componente funcional 'Proimpo' usando una 
 
     
     const init = async () => {// Función asíncrona llamada 'init' para inicializar el componente
-        const { data } = await ApiRequest().get('/proveedoresvvv');// Espera (await) el resultado de una solicitud HTTP GET a la API usando Axios.La solicitud se hace a la ruta '/proveedoresvvv' (probablemente para obtener una lista de proveedores)
+        const { data } = await ApiRequest().get('/clientesv');// Espera (await) el resultado de una solicitud HTTP GET a la API usando Axios.La solicitud se hace a la ruta '/proveedoresvvv' (probablemente para obtener una lista de proveedores)
         setUsuariosList(data);// Actualiza el estado 'usuariosList' con los datos obtenidos de la respuesta de la API
     };
 

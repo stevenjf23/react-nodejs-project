@@ -15,6 +15,7 @@ const Proveedores = lazy(() => import('../components/Pages/Proveedores'))
 const Proimpo = lazy(() => import('../components/Pages/Proimpo'))
 const Ventasvf = lazy(() => import('../components/Pages/Ventasvf'))
 const Registrov = lazy(() => import('../components/Pages/Registrov'))
+const Clientes = lazy(() => import('../components/Pages/Clientes'))
 
 const routes = [
 	{
