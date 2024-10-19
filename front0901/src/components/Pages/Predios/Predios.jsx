@@ -102,7 +102,7 @@ const Predios = () => {
     // Función que obtiene la lista de proveedores
     const fetchProveedores = async () => {
         try {  
-            const { data } = await ApiRequest().get('/proveedoresv'); // Realiza una solicitud GET a la API para obtener la lista de proveedores
+            const { data } = await ApiRequest().get('/proveedoresvvv'); // Realiza una solicitud GET a la API para obtener la lista de proveedores
             setRoles(data); // Actualiza el estado 'roles' con la lista de proveedores obtenida de la API
         } catch (error) {
             console.error('Error al obtener la lista de proveedores:', error); // Si ocurre un error durante la solicitud, se captura aquí y se muestra un mensaje en la consola
@@ -257,7 +257,7 @@ const Predios = () => {
     };
 
 
-
+//esta funcion edita
     const onEdit = async () => {
         try {
             const { data } = await ApiRequest().post('/editar_vehic', body); // Realiza una solicitud POST a la API para editar un vehículo existente, enviando el objeto 'body' como datos.
@@ -448,18 +448,18 @@ const generatePDFAutowini = () => {
     return (
         <>
             <Dialog maxWidth='xs' open={openDialogDelete} onClose={handleDialogDelete}>
-                <DialogTitle>¿Eliminar Vehiculo?</DialogTitle>
+                <DialogTitle>¿Está seguro de que desea eliminar el vehiculo?</DialogTitle>
                 <DialogContent>
                     <Typography variant='h5'>Esta acción no se puede deshacer</Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant='text' color='primary' onClick={handleDialogDelete}>Cancelar</Button>
-                    <Button variant='contained' color='primary' onClick={onDelete}>Aceptar</Button>
+                    <Button variant='text' color='primary' onClick={handleDialogDelete}>Anular Eliminacion</Button>
+                    <Button variant='contained' color='primary' onClick={onDelete}>Confirmar Eliminacion</Button>
                 </DialogActions>
             </Dialog>
             
             <Dialog maxWidth='xs' open={openDialog} onClose={handleDialog}>
-                <DialogTitle>{isEdit ? 'Formulario Editar Vehiculo' : 'Formulario Crear Vehiculo'}</DialogTitle>
+                <DialogTitle>{isEdit ? 'Formulario de Edicion de Vehiculo' : 'Formulario de Registro de Vehiculo'}</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2}>
 
@@ -752,25 +752,12 @@ const generatePDFAutowini = () => {
                     </Grid>
 
                     
-                        
-                        
-                        
-                        
-                        
-                        
-
-
-
-
-
-
-
                     </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button variant='text' color='primary' onClick={handleDialog}>Cancelar</Button>
                     <Button variant='contained' color='primary' onClick={isEdit ? onEdit : onSubmit}>
-                        {isEdit ? 'Editar Vehiculo' : 'Agregar Vehiculo'}
+                        {isEdit ? 'Editar Vehiculo' : 'Registrar Vehiculo'}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -778,7 +765,7 @@ const generatePDFAutowini = () => {
                 <ToastAutoHide message={mensaje} />
                 <Container maxWidth='lg'>
                     <Box sx={{ pb: 5 }}>
-                        <Typography variant="h5">Modulo de Inventario Vehiculos</Typography>
+                        <Typography variant="h5">Inventario de Vehiculos</Typography>
                     </Box>
                     <Grid container spacing={2}>
 
@@ -796,7 +783,7 @@ const generatePDFAutowini = () => {
 
 
                         <Grid item xs={12} sm={3}>
-                            <Button onClick={generatePDF} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Reporte Todos Los Vehiculos</Button>
+                            <Button onClick={generatePDF} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Vehiculos</Button>
                         </Grid>
                         {/*
                         <Grid item xs={12} sm={3}>
@@ -809,10 +796,10 @@ const generatePDFAutowini = () => {
 }
 
 <Grid item xs={12} sm={3}>
-    <Button onClick={generatePDFIAA} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'>Reporte IAA</Button>
+    <Button onClick={generatePDFIAA} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'>Informe General de Vehiculos de Proveedor IAA</Button>
 </Grid>
 <Grid item xs={12} sm={3}>
-    <Button onClick={generatePDFAutowini} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'>Reporte Autowini</Button>
+    <Button onClick={generatePDFAutowini} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'>Informe General de Vehiculos de Proveedor Autowini</Button>
 </Grid>
 
 

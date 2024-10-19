@@ -10,19 +10,19 @@ import 'jspdf-autotable'; // Importa el plugin 'autotable' de jsPDF, que facilit
 
 
 
-const Inventario = () => {// Definición del componente funcional 'Inventario'
+const Salidasre = () => {// Definición del componente funcional 'Inventario'
     const initialState = {// Definición de un objeto 'initialState', que contiene el estado inicial del inventario
         id: "", // Campo para el identificador único del producto (probablemente generado automáticamente)
         codigo: "",
         nombre: "", // Campo para el nombre del producto
         descripcion: "", // Campo para la descripción del producto
         id_proveedor: "", // Campo para almacenar el ID del proveedor asociado al producto
-        fecha_compra: "", // Campo para la fecha de compra del producto
+        fecha_salida: "", // Campo para la fecha de compra del producto
        
         cantidad: "", // Campo para la cantidad comprada del producto
         precio: "", // Campo para el precio del producto
         nombre_proveedor: "", // Campo para almacenar el nombre del proveedor (probablemente traído desde otra tabla o fuente)
-        subtotal:"" // Campo para almacenar el subtotal calculado (cantidad * precio), posiblemente calculado después
+       
     };//Fin de la constante inventario
 
 
@@ -49,7 +49,7 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
 
 
     const init = async () => {// Función 'init' que obtiene la lista de productos desde la API
-        const { data } = await ApiRequest().get('/productos');// Realiza una petición GET a la API en la ruta '/productos' usando la instancia de Axios 'ApiRequest'
+        const { data } = await ApiRequest().get('/productossa');// Realiza una petición GET a la API en la ruta '/productos' usando la instancia de Axios 'ApiRequest'
         setUsuariosList(data);// Una vez que los datos han sido obtenidos (productos), actualiza el estado 'usuariosList' con los datos recibidos
     };//Fin de la funcion init
 
@@ -74,8 +74,8 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
         { field: 'nombre_proveedor', headerName: 'Proveedor', width: 220 },// Columna para mostrar el nombre del proveedor del producto
         {
             // Columna para mostrar la fecha de compra del producto
-            field: 'fecha_compra',
-            headerName: 'Fecha Compra',
+            field: 'fecha_salida',
+            headerName: 'Fecha Salida',
             width: 220,
             // Formato personalizado para la fecha, que transforma el valor recibido en una fecha con formato 'DD/MM/YYYY'
             valueFormatter: (params) => {
@@ -86,65 +86,23 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
         },//Fin del field de fecha de compra
         
         { field: 'cantidad', headerName: 'Cantidad', width: 220 },// Columna para mostrar la cantidad de productos comprados
-
-        {
-            field: 'precio',
-            headerName: 'Precio',
-            width: 220,
-            renderCell: (params) => `Q. ${parseFloat(params.value).toFixed(2)}` // Formatear el precio
-        },
-
-        {
-            field: 'total',
-            headerName: 'Total',
-            width: 220,
-            renderCell: (params) => {
-                const cantidad = parseFloat(params.row.cantidad);
-                const precio = parseFloat(params.row.precio);
-                const total = cantidad * precio;
         
-                // Formatear el total a dos decimales
-                return `Q. ${total.toFixed(2)}`;
-            }
-        },
-
-
-
-
-
+        
         // Columna para mostrar las acciones (editar y eliminar) para cada fila de la tabla
-        {
-            field: '',
-            headerName: 'Acciones',
-            width: 200,
-            renderCell: (params) => (// Renderiza las acciones en una celda, usando 'renderCell' para definir el contenido personalizado
-                 // Usa Stack para alinear los botones de acción en una fila, separados por un Divider
-                <Stack direction='row' divider={<Divider orientation="vertical" flexItem />} justifyContent="center" alignItems="center" spacing={2}>
-                    {/* Botón para editar el producto */}
-                    <IconButton size='small' onClick={() => { 
-                        setIsEdit(true);// Cambia el estado a modo de edición
-                        setBody(params.row);// Coloca la fila actual en el estado 'body' para editar
-                        handleDialog();// Abre el diálogo de edición
-                    }}>
-                        <EditOutlined />{/* Ícono de edición */}
-                    </IconButton>
-                    {/* Botón para eliminar el producto */}
-                    <IconButton size='small' onClick={() => {
-                        handleDialogDelete();// Abre el diálogo de confirmación de eliminación
-                        setIdDelete(params.id); // Guarda el ID del producto a eliminar
-                    }}>
-                        <DeleteOutline /> {/* Ícono de eliminación */}
-                    </IconButton>
-                </Stack>
-            )
-        }
+
+
+      
+
+
+    
+
     ];
 
 
 
     const onDelete = async () => {// Función 'onDelete' que maneja la eliminación de un producto
         try {
-            const { data } = await ApiRequest().post('/eliminar_product', { id: idDelete });// Realiza una solicitud POST a la API en la ruta '/eliminar_product' enviando el ID del producto a eliminar
+            const { data } = await ApiRequest().post('/eliminar_products', { id: idDelete });// Realiza una solicitud POST a la API en la ruta '/eliminar_product' enviando el ID del producto a eliminar
             setMensaje({// Si la eliminación es exitosa, actualiza el estado 'mensaje' con un mensaje de éxito
                 ident: new Date().getTime(),// Genera un identificador único basado en la hora actual
                 message: data.message,// El mensaje de éxito recibido desde la API
@@ -191,7 +149,7 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
 
     const onSubmit = async () => {// Función 'onSubmit' que maneja el envío de los datos del formulario
         try {
-            const { data } = await ApiRequest().post('/guardar_product', body);// Realiza una solicitud POST a la API en la ruta '/guardar_product' con los datos del producto en el cuerpo ('body')
+            const { data } = await ApiRequest().post('/guardar_products', body);// Realiza una solicitud POST a la API en la ruta '/guardar_product' con los datos del producto en el cuerpo ('body')
             handleDialog();// Cierra el diálogo de edición (si estaba abierto)
             setBody(initialState);// Restablece el estado 'body' a su valor inicial después de enviar los datos
             setMensaje({ // Muestra un mensaje de éxito con la respuesta de la API
@@ -214,7 +172,7 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
 
     const onEdit = async () => {// Función 'onEdit' que maneja la edición de un producto existente
         try {
-            const { data } = await ApiRequest().post('/editar_product', body);// Realiza una solicitud POST a la API en la ruta '/editar_product' con los datos del producto en el cuerpo ('body')
+            const { data } = await ApiRequest().post('/editar_products', body);// Realiza una solicitud POST a la API en la ruta '/editar_product' con los datos del producto en el cuerpo ('body')
             handleDialog();// Cierra el diálogo de edición (si estaba abierto)
             setBody(initialState);// Restablece el estado 'body' a su valor inicial después de enviar los datos
             setMensaje({// Muestra un mensaje de éxito con la respuesta de la API
@@ -236,9 +194,9 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
 
     const generatePDF = () => {// Función para generar el reporte PDF con todos los productos
         const doc = new jsPDF();// Crea una nueva instancia de jsPDF
-        doc.text("Reporte de Inventario", 20, 10);// Añade un título en la posición (20, 10) en la página
+        doc.text("Reporte de Productos Sacados", 20, 10);// Añade un título en la posición (20, 10) en la página
         doc.autoTable({// Utiliza el plugin autoTable de jsPDF para crear una tabla en el PDF
-            head: [['ID', 'Nombre', 'Descripción',  'Proveedor',  'Fecha Compra',  'Cantidad', 'Precio', 'Subtotal']],// Definición de la cabecera de la tabla con los nombres de las columnas
+            head: [['ID', 'Nombre', 'Descripción',  'Proveedor',  'Fecha Salida',  'Cantidad']],// Definición de la cabecera de la tabla con los nombres de las columnas
             body: usuariosList.map(product => [ // El cuerpo de la tabla contiene los datos de la lista de productos 'usuariosList'
                 product.id, // ID del producto
                 product.nombre, // Nombre del producto
@@ -333,7 +291,7 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
             
             <Dialog maxWidth='xs' open={openDialog} onClose={handleDialog}>
                 {/* Título dinámico que cambia dependiendo de si es edición o creación */}
-                <DialogTitle>{isEdit ? 'Formulario de Edicion de Producto' : 'Formulario de Registro de Productos'}</DialogTitle>
+                <DialogTitle>{isEdit ? 'Formulario de Edicion de Salida de Producto' : 'Formulario de Registro de Salida de Productos'}</DialogTitle>
 
 
                 <DialogContent>
@@ -418,14 +376,14 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
                             <TextField
                                 type='date'// Define el tipo de campo como 'date', lo que muestra un selector de fecha en el navegador
                                 margin='normal'// Aplica un margen estándar alrededor del campo de texto
-                                name='fecha_compra'// Asocia el campo con el nombre "fecha_compra" en el estado
+                                name='fecha_salida'// Asocia el campo con el nombre "fecha_compra" en el estado
                                 value={formatDate(body.fecha_compra)}// Muestra el valor formateado de la fecha desde el estado 'body.fecha_compra'
                                 onChange={onChange}// Llama a la función onChange para actualizar el estado cuando el usuario selecciona o cambia la fecha
                                 variant='outlined'// Estilo del campo de texto con borde contorneado
                                 size='small'// Tamaño del campo (pequeño)
                                 color='primary'// Color del campo utilizando el esquema de colores 'primary'
                                 fullWidth// Hace que el campo ocupe todo el ancho disponible en su contenedor
-                                label='Fecha de Compra'// Etiqueta que se muestra en el campo
+                                label='Fecha de Salida'// Etiqueta que se muestra en el campo
                                 InputLabelProps={{ shrink: true }}// Mantiene la etiqueta siempre visible aunque el campo esté vacío
                             />
                         </Grid>
@@ -449,31 +407,8 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
                             />
                         </Grid>
 
-                        <Grid item xs={12}>
-    <TextField
-        margin='normal'
-        name='precio'
-        value={body.precio}
-        onChange={onChange}
-        variant='outlined'
-        size='small'
-        fullWidth
-        label='Precio'
-        InputProps={{
-            startAdornment: <Typography>Q.</Typography>
-        }}
-    />
-</Grid>
 
 
-
-
-
-
-
-
-
-                        
                     </Grid>
                 </DialogContent>
 
@@ -493,7 +428,7 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
 
 
         
-            <Page title="FF| Inventario Productos">
+            <Page title="FF| Registro Salidas Productos">
                  {/* Componente ToastAutoHide para mostrar mensajes de éxito o error */}
                 <ToastAutoHide message={mensaje} />
                  {/* Contenedor principal con un ancho máximo de 'lg' (large) */}
@@ -501,7 +436,7 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
                     {/* Box que aplica un padding-bottom (pb) de 5 unidades */}
                     <Box sx={{ pb: 5 }}>
                         {/* Título principal del módulo de inventario */}
-                        <Typography variant="h5">Inventario del Car Wash</Typography>
+                        <Typography variant="h5">Registro de Salida de Productos</Typography>
                     </Box>
 
 
@@ -522,16 +457,24 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
 
                         <Grid item xs={12} sm={3}>
                             {/* Botón para generar el reporte PDF general de inventario */}
-                            <Button onClick={generatePDF} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos</Button>
+                            <Button onClick={generatePDF} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos Sacados</Button>
                         </Grid>
+
+
+                        
+
                         <Grid item xs={12} sm={3}>
                             {/* Botón para generar el reporte PDF de productos "QuimicosDeLaEra" */}
-                            <Button onClick={generatePDFQuimicosDeLaEra} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos de QuimicosDeLaEra</Button>
+                          {/*  <Button onClick={generatePDFQuimicosDeLaEra} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos de QuimicosDeLaEra</Button>*/}
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             {/* Botón para generar el reporte PDF de productos "Quimicos FERKICA" */}
-                            <Button onClick={generatePDFFerkica} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos de Quimicos FERKICA</Button>
+                           {/* <Button onClick={generatePDFFerkica} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos de Quimicos FERKICA</Button> */}
                         </Grid>
+
+                            
+
+
                         <Grid item xs={12} sm={12}>
                             {/* Componente para mostrar la tabla con los datos de los productos */}
                             <CommonTable data={usuariosList} columns={columns} />
@@ -543,4 +486,4 @@ const Inventario = () => {// Definición del componente funcional 'Inventario'
     );
 }
 
-export default Inventario;// Exporta el componente 'Inventario' para que pueda ser utilizado en otras partes de la aplicación
+export default Salidasre;// Exporta el componente 'Inventario' para que pueda ser utilizado en otras partes de la aplicación

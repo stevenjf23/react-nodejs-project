@@ -10,13 +10,13 @@ import 'jspdf-autotable'; // Importa el plugin 'autotable' para jsPDF, que facil
 
 
 
-const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una función de flecha
+const Servicios = () => { // Define el componente funcional 'Proimpo' usando una función de flecha
     const initialState = { // Define un estado inicial (initialState) que contiene las propiedades básicas para un objeto de información
         id: "", // Propiedad 'id', inicialmente vacía
         nombre: "", // Propiedad 'nombre', inicialmente vacía
-        correo: "", // Propiedad 'correo', inicialmente vacía
-        telefono: "", // Propiedad 'telefono', inicialmente vacía
-        direccion: "", // Propiedad 'direccion', inicialmente vacía
+        descripcion: "", // Propiedad 'correo', inicialmente vacía
+        precio: "", // Propiedad 'telefono', inicialmente vacía
+        tiempo: "", // Propiedad 'direccion', inicialmente vacía
     };
 
 
@@ -33,18 +33,18 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
 
     
     const init = async () => {// Función asíncrona llamada 'init' para inicializar el componente
-        const { data } = await ApiRequest().get('/proveedoresvvv');// Espera (await) el resultado de una solicitud HTTP GET a la API usando Axios.La solicitud se hace a la ruta '/proveedoresvvv' (probablemente para obtener una lista de proveedores)
+        const { data } = await ApiRequest().get('/serviciosc');// Espera (await) el resultado de una solicitud HTTP GET a la API usando Axios.La solicitud se hace a la ruta '/proveedoresvvv' (probablemente para obtener una lista de proveedores)
         setUsuariosList(data);// Actualiza el estado 'usuariosList' con los datos obtenidos de la respuesta de la API
     };
 
 
 
     const columns = [// Define un array 'columns' que contiene la configuración de las columnas para una tabla
-        { field: 'id', headerName: 'Codigo', width: 120 }, // Primera columna que muestra el ID (Código)
+        { field: 'id', headerName: 'ID', width: 120 }, // Primera columna que muestra el ID (Código)
         { field: 'nombre', headerName: 'Nombre', width: 220 },// Segunda columna que muestra el nombre
-        { field: 'correo', headerName: 'Correo', width: 220 },// Tercera columna que muestra el correo electrónico
-        { field: 'telefono', headerName: 'Telefono', width: 220 },// Cuarta columna que muestra el número de teléfono
-        { field: 'direccion', headerName: 'Direccion', width: 220 },// Quinta columna que muestra la dirección
+        { field: 'descripcion', headerName: 'Descripcion', width: 220 },// Tercera columna que muestra el correo electrónico
+        { field: 'precio', headerName: 'Precio', width: 220 },// Cuarta columna que muestra el número de teléfono
+        { field: 'tiempo', headerName: 'Tiempo', width: 220 },// Quinta columna que muestra la dirección
         // Columna para acciones (como editar y eliminar)
         {
             field: '',// Este campo está vacío porque no se corresponde a una propiedad en los datos
@@ -76,7 +76,7 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
 
     const onDelete = async () => {// Función asíncrona llamada 'onDelete' que maneja la eliminación de un proveedor
         try {
-            const { data } = await ApiRequest().post('/eliminar_proveedorimpo', { id: idDelete });// Envía una solicitud POST a la API para eliminar un proveedor usando su ID
+            const { data } = await ApiRequest().post('/eliminar_serviciosc', { id: idDelete });// Envía una solicitud POST a la API para eliminar un proveedor usando su ID
             setMensaje({ // Actualiza el estado 'mensaje' con la respuesta exitosa de la API
                 ident: new Date().getTime(),// Genera un identificador único basado en la hora actual
                 message: data.message,// Mensaje de éxito devuelto por la API
@@ -119,7 +119,7 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
 
     const onSubmit = async () => {// Función asíncrona llamada 'onSubmit' que maneja el envío del formulario
         try {
-            const { data } = await ApiRequest().post('/guardar_proveedorimpo', body); // Envía una solicitud POST a la API para guardar un nuevo proveedor con los datos del cuerpo del formulario
+            const { data } = await ApiRequest().post('/guardar_serviciosc', body); // Envía una solicitud POST a la API para guardar un nuevo proveedor con los datos del cuerpo del formulario
             handleDialog();// Cierra el cuadro de diálogo de edición
             setBody(initialState);// Restablece el cuerpo del formulario a su estado inicial
             setMensaje({// Actualiza el estado 'mensaje' con la respuesta exitosa de la API
@@ -142,7 +142,7 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
 
     const onEdit = async () => {// Función asíncrona llamada 'onEdit' que maneja la edición de un proveedor
         try {
-            const { data } = await ApiRequest().post('/editar_proveedorimpo', body);// Envía una solicitud POST a la API para editar un proveedor con los datos del cuerpo del formulario
+            const { data } = await ApiRequest().post('/editar_serviciosc', body);// Envía una solicitud POST a la API para editar un proveedor con los datos del cuerpo del formulario
             handleDialog();// Cierra el cuadro de diálogo de edición
             setBody(initialState);// Restablece el cuerpo del formulario a su estado inicial
             setMensaje({// Actualiza el estado 'mensaje' con la respuesta exitosa de la API
@@ -240,7 +240,7 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
         {/* Diálogo de confirmación para la eliminación de un proveedor */}
             <Dialog maxWidth='xs' open={openDialogDelete} onClose={handleDialogDelete}>
                 <DialogTitle>
-                ¿Está seguro de que desea eliminar al proveedor?
+                ¿Está seguro de que desea eliminar el servicio de Car Wash?
                 </DialogTitle>
                 <DialogContent>
                     <Typography variant='h5'>Esta acción no se puede deshacer</Typography>
@@ -258,7 +258,7 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
             <Dialog maxWidth='xs' open={openDialog} onClose={handleDialog}>
                 <DialogTitle>
                      {/* Título dinámico basado en el estado de edición */}
-                    {isEdit ? 'Formulario de Edicion Proveedor de Vehiculo' : 'Formulario de Registro de Proveedor de Vehiculos'}
+                    {isEdit ? 'Formulario de Edicion de Servicios de Car Wash' : 'Formulario de Registro de Servicios de Car Wash'}
                 </DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2}>
@@ -280,42 +280,42 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
-                                name='correo'
-                                value={body.correo}// Vinculado al estado 'body'
+                                name='descripcion'
+                                value={body.descripcion}// Vinculado al estado 'body'
                                 onChange={onChange}// Maneja el cambio en el campo
                                 variant='outlined'
                                 size='small'
                                 color='primary'
                                 fullWidth
-                                label='Correo Electronico'
+                                label='Descripcion'
                             />
                         </Grid>
                         {/* Campo de texto para el teléfono del proveedor */}
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
-                                name='telefono'
-                                value={body.telefono}// Vinculado al estado 'body'
+                                name='precio'
+                                value={body.precio}// Vinculado al estado 'body'
                                 onChange={onChange}// Maneja el cambio en el campo
                                 variant='outlined'
                                 size='small'
                                 color='primary'
                                 fullWidth
-                                label='Telefono'
+                                label='Precio'
                             />
                         </Grid>
                         {/* Campo de texto para la dirección del proveedor */}
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin='normal'
-                                name='direccion'
-                                value={body.direccion}// Vinculado al estado 'body'
+                                name='tiempo'
+                                value={body.tiempo}// Vinculado al estado 'body'
                                 onChange={onChange}// Maneja el cambio en el campo
                                 variant='outlined'
                                 size='small'
                                 color='primary'
                                 fullWidth
-                                label='Direccion'
+                                label='Tiempo'
                             />
                         </Grid>  
                     </Grid>
@@ -324,22 +324,22 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
                      {/* Botón para cancelar la acción de edición o creación */}
                     <Button variant='text' color='primary' onClick={handleDialog}>Anular Registro</Button>
                     {/* Botón para guardar el proveedor, que llama a onEdit o onSubmit dependiendo del estado */}
-                    <Button variant='contained' color='primary' onClick={isEdit ? () => onEdit() : () => onSubmit()}>Registrar Proveedor de Vehiculos</Button>
+                    <Button variant='contained' color='primary' onClick={isEdit ? () => onEdit() : () => onSubmit()}>Registrar Servicios de Car Wash</Button>
                 </DialogActions>
             </Dialog>
 
 
             {/* Componente de la página principal con un título */}
-            <Page title="FF| Proveedor de Vehiculos">
+            <Page title="FF| Servicios de Car Wash">
                 <ToastAutoHide message={mensaje} />{/* Componente para mostrar mensajes temporales */}
                 <Container maxWidth='lg'>
                     <Box sx={{ pb: 5 }}>
-                        <Typography variant="h5">Panel de Control de Proveedores de Vehiculos</Typography>
+                        <Typography variant="h5">Panel de Control de Servicios Car Wash</Typography>
                     </Box>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={3}>
                              {/* Botón para agregar un nuevo proveedor */}
-                            <Button onClick={() => {setIsEdit(false); handleDialog(); setBody(initialState);}} startIcon={<AddOutlined />} variant='contained' color='primary'> Registrar Proveedor de Vehiculo</Button>
+                            <Button onClick={() => {setIsEdit(false); handleDialog(); setBody(initialState);}} startIcon={<AddOutlined />} variant='contained' color='primary'> Registrar Servicio de Car Wash</Button>
                         </Grid>
 
 
@@ -375,4 +375,4 @@ const Proimpo = () => { // Define el componente funcional 'Proimpo' usando una f
     );
 }
 
-export default Proimpo;// Exporta el componente Proimpo como la exportación por defecto
+export default Servicios;// Exporta el componente Proimpo como la exportación por defecto

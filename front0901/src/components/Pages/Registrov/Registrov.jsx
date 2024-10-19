@@ -8,7 +8,7 @@ import CommonTable from '../../common/CommonTable';// Componente de tabla reutil
 import jsPDF from 'jspdf'; // Importa la librería jsPDF, que permite generar archivos PDF desde JavaScript.
 import 'jspdf-autotable'; // Importa el plugin "autotable" de jsPDF, que facilita la creación de tablas dentro de un PDF.
 
-
+//ventas
 
 const Registrov = () => {
 
@@ -31,7 +31,7 @@ const Registrov = () => {
         motor:"",// Número o identificación del motor del vehículo.
         cilindros:"",// Número de cilindros del motor.
         c_c:"",	// Cilindrada o capacidad cúbica del motor.
-        id_proveedor_vehiculo: "",// Identificación del proveedor o vendedor del vehículo.
+        id_clientes: "",// Identificación del proveedor o vendedor del vehículo.
         fecha_venta: "",	// Fecha en que el vehículo fue adquirido.
         precio_compra: "",	// Precio de compra del vehículo.
         precio_venta: ""// Valor estimado o actual del vehículo.
@@ -102,7 +102,7 @@ const Registrov = () => {
     // Función que obtiene la lista de proveedores
     const fetchProveedores = async () => {
         try {  
-            const { data } = await ApiRequest().get('/proveedoresv'); // Realiza una solicitud GET a la API para obtener la lista de proveedores
+            const { data } = await ApiRequest().get('/clientesvvv'); // Realiza una solicitud GET a la API para obtener la lista de proveedores
             setRoles(data); // Actualiza el estado 'roles' con la lista de proveedores obtenida de la API
         } catch (error) {
             console.error('Error al obtener la lista de proveedores:', error); // Si ocurre un error durante la solicitud, se captura aquí y se muestra un mensaje en la consola
@@ -113,7 +113,7 @@ const Registrov = () => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 120 }, // Columna que muestra el ID (código único) del vehículo. Tiene un ancho de 120 píxeles.
-        { field: 'Codigo', headerName: 'Codigo', width: 120 },
+        { field: 'codigo', headerName: 'Codigo', width: 120 },
         { field: 'placa', headerName: 'Placa', width: 220 }, // Columna que muestra la placa del vehículo. El ancho de la columna es de 220 píxeles.
         { field: 'tipo_vehiculo', headerName: 'Tipo vehiculo', width: 220 }, // Columna que muestra el tipo de vehículo (por ejemplo, auto, moto, camión). Ancho de 220 píxeles.
         { field: 'marca', headerName: 'Marca', width: 220 }, // Columna que muestra la marca del vehículo. Tiene un ancho de 220 píxeles.
@@ -129,7 +129,7 @@ const Registrov = () => {
         { field: 'motor', headerName: 'Motor', width: 220 },// Columna que muestra el número del motor del vehículo. Ancho de 220 píxeles.
         { field: 'cilindros', headerName: 'Cilindros', width: 220 },// Columna que muestra el número de cilindros del motor del vehículo. Ancho de 220 píxeles.
         { field: 'c_c', headerName: 'C_C', width: 220 },// Columna que muestra la cilindrada (capacidad cúbica) del motor del vehículo. Ancho de 220 píxeles.
-        { field: 'nombre_proveedor_vehiculo', headerName: 'Proveedor de Vehiculos', width: 220 },// Columna que muestra el nombre del proveedor del vehículo. Ancho de 220 píxeles.
+        { field: 'nombre_clientes', headerName: 'Clientes de Vehiculos', width: 220 },// Columna que muestra el nombre del proveedor del vehículo. Ancho de 220 píxeles.
         // Columna que muestra la fecha de compra del vehículo.
         // - 'field': 'fecha_compra' hace referencia al campo 'fecha_compra' en los datos del vehículo.
         // - 'headerName': 'Fecha Compra' es el encabezado que se verá en la tabla.
@@ -286,7 +286,7 @@ const Registrov = () => {
         doc.text("Reporte de Inventario Vehiculo", 20, 10);// Añade un título al PDF en la posición (20, 10).
         doc.autoTable({// Utiliza el plugin autotable para agregar una tabla al PDF.
              // Define la cabecera de la tabla con los nombres de los campos.
-            head: [['id', 'placa', 'tipo_vehiculo', 'marca', 'modelo', 'color', 'uso', 'linea', 'chasis', 'serie', 'numero_asientos', 'ejes', 'numero_vin', 'motor', 'cilindros', 'c_c', 'id_proveedor_vehiculo', 'fecha_compra', 'precio_compra', 'precio_vehiculo']],
+            head: [['id', 'placa', 'tipo_vehiculo', 'marca', 'modelo', 'color', 'uso', 'linea', 'chasis', 'serie', 'numero_asientos', 'ejes', 'numero_vin', 'motor', 'cilindros', 'c_c', 'id_clientes', 'fecha_venta', 'precio_compra', 'precio_venta']],
            // El cuerpo de la tabla se llena con los datos de la lista de vehículos (usuariosList).
             body: usuariosList.map(product => [
                 product.id,
@@ -305,7 +305,7 @@ const Registrov = () => {
                 product.motor,
                 product.cilindros,
                 product.c_c,
-                product.nombre_proveedor_vehiculo,
+                product.nombre_clientes,
                 formatDate(product.fecha_venta), // Formatea la fecha de compra antes de agregarla a la tabla.
                 product.precio_compra, 
                 product.precio_venta,     
@@ -448,18 +448,18 @@ const generatePDFAutowini = () => {
     return (
         <>
             <Dialog maxWidth='xs' open={openDialogDelete} onClose={handleDialogDelete}>
-                <DialogTitle>¿Eliminar Vehiculo?</DialogTitle>
+                <DialogTitle>¿Está seguro de que desea eliminar al usuario?</DialogTitle>
                 <DialogContent>
                     <Typography variant='h5'>Esta acción no se puede deshacer</Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant='text' color='primary' onClick={handleDialogDelete}>Cancelar</Button>
-                    <Button variant='contained' color='primary' onClick={onDelete}>Aceptar</Button>
+                    <Button variant='text' color='primary' onClick={handleDialogDelete}>Anular Eliminacion</Button>
+                    <Button variant='contained' color='primary' onClick={onDelete}>Confirmar Elminacion</Button>
                 </DialogActions>
             </Dialog>
             
             <Dialog maxWidth='xs' open={openDialog} onClose={handleDialog}>
-                <DialogTitle>{isEdit ? 'Formulario Editar Vehiculo' : 'Formulario Crear Vehiculo'}</DialogTitle>
+                <DialogTitle>{isEdit ? 'Formulario de Edicion Vehiculo Vendido' : 'Formulario de Registro de Venta de Vehiculo'}</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2}>
 
@@ -686,18 +686,18 @@ const generatePDFAutowini = () => {
 
 
                     <Grid item xs={12} sm={6}>
-                        <InputLabel htmlFor="id_proveedor_vehiculo">Proveedor Vehiculo</InputLabel>
+                        <InputLabel htmlFor="id_clientes">Cliente Vehiculo</InputLabel>
                         <Select
-                            name="id_proveedor_vehiculo"
-                            value={body.id_proveedor_vehiculo || ''}
+                            name="id_clientes"
+                            value={body.id_clientes || ''}
                             onChange={onChange}
                             variant="outlined"
                             size="small"
                             fullWidth
                         >
-                            {roles.map((id_prov) => (
-                                <MenuItem key={id_prov.id} value={id_prov.id}>
-                                    {id_prov.nombre}
+                            {roles.map((id_clie) => (
+                                <MenuItem key={id_clie.id} value={id_clie.id}>
+                                    {id_clie.nombre}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -797,7 +797,7 @@ const generatePDFAutowini = () => {
 
 
                         <Grid item xs={12} sm={3}>
-                            <Button onClick={generatePDF} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Reporte Todos Los Vehiculos</Button>
+                            <Button onClick={generatePDF} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Vehiculos Vendidos</Button>
                         </Grid>
                         {/*
                         <Grid item xs={12} sm={3}>
@@ -809,12 +809,15 @@ const generatePDFAutowini = () => {
 */
 }
 
+{/*
 <Grid item xs={12} sm={3}>
     <Button onClick={generatePDFIAA} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'>Reporte IAA</Button>
 </Grid>
 <Grid item xs={12} sm={3}>
     <Button onClick={generatePDFAutowini} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'>Reporte Autowini</Button>
 </Grid>
+
+*/}
 
 
 
