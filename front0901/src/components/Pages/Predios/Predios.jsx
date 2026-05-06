@@ -145,23 +145,33 @@ const Predios = () => {
                 return fecha.toLocaleDateString('es-ES', options);
             }
         },
-        // Columna que muestra el precio de compra del vehículo.
-        // - 'field': 'precio_compra' hace referencia al campo que almacena el precio de compra.
-        // - 'headerName': 'Precio de Compra' es el nombre que se mostrará en la tabla como encabezado de la columna.
-        // - 'width': Define el ancho de la columna en píxeles (220px).
-        { field: 'precio_compra', headerName: 'Precio de Compra', width: 220 },
-        // Columna que muestra el precio del vehículo.
-        // - 'field': 'precio_vehiculo' se refiere al campo que contiene el precio del vehículo.
-        // - 'headerName': 'Precio de Vehículo' es el título que aparecerá en la columna.
-        // - 'width': Establece el ancho de la columna en 220px.
-        { field: 'precio_vehiculo', headerName: 'Precio de Vehiculo', width: 220 },
-        // Columna especial que renderiza acciones (botones de edición y eliminación).
-        // - 'field': Se deja vacío porque no se asocia a un campo específico de los datos.
-        // - 'headerName': 'Acciones' es el título que aparece en la columna, indicando que aquí se muestran las acciones.
-        // - 'renderCell': Es una función que define el contenido personalizado de las celdas en esta columna.
-        //   - Dentro del `renderCell`, se utiliza un `Stack` (de Material UI) para alinear los botones de edición y eliminación en fila, con un separador vertical entre ellos.
-        //   - El `IconButton` de edición (`<EditOutlined />`) permite editar el vehículo cuando se hace clic. Cambia el estado `isEdit` a `true`, establece los datos del vehículo en `body` y abre el diálogo de edición.
-        //   - El `IconButton` de eliminación (`<DeleteOutline />`) abre el diálogo de confirmación de eliminación y asigna el ID del vehículo a eliminar en el estado `idDelete`.
+
+        {
+            field: 'precio_compra',
+            headerName: 'Precio Compra',
+            width: 220,
+            renderCell: (params) => `Q. ${parseFloat(params.value).toFixed(2)}` // Formatear el precio
+        },
+
+        {
+            field: 'precio_vehiculo',
+            headerName: 'Precio Vehiculo',
+            width: 220,
+            renderCell: (params) => `Q. ${parseFloat(params.value).toFixed(2)}` // Formatear el precio
+        },
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
         {
             field: '',
             headerName: 'Acciones',
@@ -286,29 +296,22 @@ const Predios = () => {
         doc.text("Reporte de Inventario Vehiculo", 20, 10);// Añade un título al PDF en la posición (20, 10).
         doc.autoTable({// Utiliza el plugin autotable para agregar una tabla al PDF.
              // Define la cabecera de la tabla con los nombres de los campos.
-            head: [['id', 'placa', 'tipo_vehiculo', 'marca', 'modelo', 'color', 'uso', 'linea', 'chasis', 'serie', 'numero_asientos', 'ejes', 'numero_vin', 'motor', 'cilindros', 'c_c', 'id_proveedor_vehiculo', 'fecha_compra', 'precio_compra', 'precio_vehiculo']],
+            head: [['id', 'placa', 'marca', 'modelo', 'color',  'linea',   'id_proveedor_vehiculo', 'fecha_compra', 'precio_compra']],
            // El cuerpo de la tabla se llena con los datos de la lista de vehículos (usuariosList).
             body: usuariosList.map(product => [
                 product.id,
                 product.placa,
-                product.tipo_vehiculo, 
+                
                 product.marca, 
                 product.modelo,
                 product.color,
-                product.uso,
+                
                 product.linea,
-                product.chasis,
-                product.serie, 
-                product.numero_asientos,
-                product.ejes,
-                product.numero_vin, 
-                product.motor,
-                product.cilindros,
-                product.c_c,
+         
                 product.nombre_proveedor_vehiculo,
                 formatDate(product.fecha_compra), // Formatea la fecha de compra antes de agregarla a la tabla.
                 product.precio_compra, 
-                product.precio_vehiculo,     
+                
             ])
         });
         doc.save('reporte_inventario_vehiculos.pdf');// Guarda el PDF generado con el nombre 'reporte_inventario_vehiculos.pdf'.
@@ -372,7 +375,7 @@ const generatePDFIAA = () => {
     doc.text("Reporte de Vehículos - IAA", 20, 10);// Añade un título al PDF en la posición (20, 10).
     doc.autoTable({// Utiliza el plugin autotable para agregar una tabla al PDF.
         // Define la cabecera de la tabla con los nombres de los campos relevantes.
-        head: [['ID', 'Placa', 'Tipo vehiculo', 'Marca', 'Modelo', 'Color', 'Uso', 'Linea', 'Chasis', 'Serie', 'Numero asientos', 'Ejes', 'Numero vin', 'Motor', 'Cilindros', 'c_c', 'Proveedor', 'Fecha compra', 'Precio compra', 'Precio vehiculo']],
+        head: [['ID', 'Placa', 'Marca', 'Modelo', 'Color', 'Linea',  'Proveedor', 'Fecha compra', 'Precio compra']],
         // El cuerpo de la tabla se llena con los datos de los vehículos filtrados de IAA.
         body: vehiculosIAA.map(vehicle => [
             vehicle.id, 
@@ -380,20 +383,15 @@ const generatePDFIAA = () => {
             vehicle.marca, 
             vehicle.modelo,
             vehicle.color,
-            vehicle.uso,
+           
             vehicle.linea,
-            vehicle.chasis,
-            vehicle.serie,
-            vehicle.numero_asientos,
-            vehicle.ejes,
-            vehicle.numero_vin, 
-            vehicle.motor,
-            vehicle.cilindros,
-            vehicle.c_c, 
+            
+            
+           
             vehicle.nombre_proveedor_vehiculo,
             formatDate(vehicle.fecha_compra),// Formatea la fecha de compra antes de agregarla a la tabla.
             vehicle.precio_compra, 
-            vehicle.precio_vehiculo
+            
         ])
     });
     doc.save('reporte_vehiculos_IAA.pdf');// Guarda el PDF generado con el nombre 'reporte_vehiculos_IAA.pdf'.
@@ -408,7 +406,7 @@ const generatePDFAutowini = () => {
     doc.text("Reporte de Vehículos - Autowini", 20, 10);// Añade un título al PDF en la posición (20, 10).
     doc.autoTable({// Utiliza el plugin autotable para agregar una tabla al PDF.
        // Define la cabecera de la tabla con los nombres de los campos relevantes.
-        head: [['ID', 'Placa', 'Tipo vehiculo', 'Marca', 'Modelo', 'Color', 'Uso', 'Linea', 'Chasis', 'Serie', 'Numero asientos', 'Ejes', 'Numero vin', 'Motor', 'Cilindros', 'c_c', 'Proveedor', 'Fecha compra', 'Precio compra', 'Precio vehiculo']],
+        head: [['ID', 'Placa',  'Marca', 'Modelo', 'Color',  'Linea',   'Proveedor', 'Fecha compra', 'Precio compra']],
          // El cuerpo de la tabla se llena con los datos de los vehículos filtrados de Autowini.
         body: vehiculosAutowini.map(vehicle => [
             vehicle.id, 
@@ -416,20 +414,13 @@ const generatePDFAutowini = () => {
             vehicle.marca, 
             vehicle.modelo,
             vehicle.color,
-            vehicle.uso,
+            
             vehicle.linea,
-            vehicle.chasis,
-            vehicle.serie,
-            vehicle.numero_asientos,
-            vehicle.ejes,
-            vehicle.numero_vin, 
-            vehicle.motor,
-            vehicle.cilindros,
-            vehicle.c_c,   
+             
             vehicle.nombre_proveedor_vehiculo,
             formatDate(vehicle.fecha_compra),// Formatea la fecha de compra antes de agregarla a la tabla.
-            vehicle.precio_compra, 
-            vehicle.precio_vehiculo
+            vehicle.precio_compra
+            
         ])
     });
     doc.save('reporte_vehiculos_Autowini.pdf');// Guarda el PDF generado con el nombre 'reporte_vehiculos_Autowini.pdf'.
@@ -723,33 +714,51 @@ const generatePDFAutowini = () => {
 
 
 
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            margin='normal'
-                            name='precio_compra'
-                            value={body.precio_compra}
-                            onChange={onChange}
-                            variant='outlined'
-                            size='small'
-                            fullWidth
-                            label='Precio Compra'
-                        />
-                    </Grid>
+
+
+                    <Grid item xs={12}>
+    <TextField
+        margin='normal'
+        name='precio_compra'
+        value={body.precio_compra}
+        onChange={onChange}
+        variant='outlined'
+        size='small'
+        fullWidth
+        label='Precio Compra'
+        InputProps={{
+            startAdornment: <Typography>Q.</Typography>
+        }}
+    />
+</Grid>
+
+
+<Grid item xs={12}>
+    <TextField
+        margin='normal'
+        name='precio_vehiculo'
+        value={body.precio_vehiculo}
+        onChange={onChange}
+        variant='outlined'
+        size='small'
+        fullWidth
+        label='Precio Vehiculo'
+        InputProps={{
+            startAdornment: <Typography>Q.</Typography>
+        }}
+    />
+</Grid>
 
 
 
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            margin='normal'
-                            name='precio_vehiculo'
-                            value={body.precio_vehiculo}
-                            onChange={onChange}
-                            variant='outlined'
-                            size='small'
-                            fullWidth
-                            label='Precio Vehiculo'
-                        />
-                    </Grid>
+
+
+
+
+
+
+
+
 
                     
                     </Grid>

@@ -18,8 +18,8 @@ const Usuarios = () => {
         usuario: "",
         contrasena: "",
         descripcion: "",
-        estado: "",
-        rol: " "
+        estado: ""
+      //  rol: " "
     };
 
 
@@ -48,7 +48,7 @@ const Usuarios = () => {
         { field: 'nombre', headerName: 'Nombre y Apellido', width: 220 },
         { field: 'usuario', headerName: 'Nombre de Usuario', width: 220 },
         { field: 'contrasena', headerName: 'Contraseña', width: 220 },
-        { field: 'descripcion', headerName: 'Rol', width: 220 },
+       // { field: 'descripcion', headerName: 'Rol', width: 220 },
         { field: 'estado', headerName: 'Estado', width: 220 },
         {
             field: '',
@@ -169,8 +169,8 @@ const Usuarios = () => {
         const doc = new jsPDF();
         doc.text(title, 20, 10);
         doc.autoTable({
-            head: [['ID', 'Correo', 'Nombre', 'Usuario', 'Rol', 'Estado']],
-            body: usuarios.map(user => [user.id, user.correo, user.nombre, user.usuario, user.rol, user.estado])
+            head: [['ID', 'Correo', 'Nombre', 'Usuario',  'Estado']],
+            body: usuarios.map(user => [user.id, user.correo, user.nombre, user.usuario,  user.estado])
         });
         doc.save(`${title.replace(/\s+/g, '_').toLowerCase()}.pdf`);
     };
@@ -307,6 +307,8 @@ const Usuarios = () => {
                                 label='Contraseña'
                             />
                         </Grid>
+
+                        {/*
                         <Grid item xs={12}>
                         <InputLabel htmlFor="rol">Rol del usuario</InputLabel>
                         <Select
@@ -324,7 +326,7 @@ const Usuarios = () => {
                             ))}
                         </Select>
                     </Grid>
-
+*/}
 
 
 
@@ -371,10 +373,12 @@ const Usuarios = () => {
                         <Grid item xs={12} sm={3}>
                             <Button onClick={handleGenerateInactiveUsersReport} startIcon={<PictureAsPdfOutlined />} variant='contained' style={{ backgroundColor: '#002244', color: 'white' }}> Informe General de Usuarios Inactivos</Button>
                         </Grid>
+                        
+                        {/*
                         <Grid item xs={12} sm={3}>
                             <Button onClick={handleGenerateAdminUsersReport} startIcon={<PictureAsPdfOutlined />} variant='contained' style={{ backgroundColor: '#002244', color: 'white' }}> Informe de Administradores</Button>
                         </Grid>
-                        
+                            */}
                         {/*
                         <Grid item xs={12} sm={3}>
                             <Button onClick={handleGenerateUserUsersReport} startIcon={<PictureAsPdfOutlined />} variant='contained' style={{ backgroundColor: '#002244', color: 'white' }}> Informe de Usuarios Estandar</Button>

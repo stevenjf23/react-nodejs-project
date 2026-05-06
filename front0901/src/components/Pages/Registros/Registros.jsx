@@ -9,10 +9,11 @@ import jsPDF from 'jspdf'; // Importa la librería jsPDF, que permite generar ar
 import 'jspdf-autotable'; // Importa el plugin 'autotable' de jsPDF, que facilita la creación de tablas dentro de los PDF
 
 
-
+//dd
 const Registros = () => {// Definición del componente funcional 'Inventario'
     const initialState = {// Definición de un objeto 'initialState', que contiene el estado inicial del inventario
         id: "", // Campo para el identificador único del producto (probablemente generado automáticamente)
+        id_clientes: "",
         id_servicios: "",
         fecha_servicio: "",
         marca: "", // Campo para el nombre del producto
@@ -21,7 +22,9 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
         linea: "", // Campo para la fecha de compra del producto
 
         precio: "", // Campo para el precio del producto
+        nombre_clientes: "",
         nombre_servicios: "", // Campo para almacenar el nombre del proveedor (probablemente traído desde otra tabla o fuente)
+        
         
     };//Fin de la constante inventario
 
@@ -38,6 +41,7 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
 
 
     const [roles, setRoles] = useState([]); // Estado para almacenar la lista de roles (parece que aquí se refiere a una lista de proveedores, aunque el nombre es 'roles')
+    const [roless, setRoless] = useState([]);
     const [usuariosList, setUsuariosList] = useState([]);// Estado para almacenar una lista de usuarios, posiblemente relacionado con los proveedores o productos
     const [body, setBody] = useState(initialState);// Estado que contiene el cuerpo del formulario o los datos del producto/proveedor, inicializado con 'initialState'
     const [openDialog, setOpenDialog] = useState(false);// Estado para controlar la apertura o cierre de un diálogo (modal), por defecto está cerrado (false)
@@ -64,11 +68,23 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
         }//Fin del catch
     };//Fin del fetchproveedores
 
+        //para clientes
+        const fetchRoless = async () => {
+            try {
+                const response = await ApiRequest().get('/clientesvvv');
+                setRoless(response.data);
+            } catch (error) {
+                console.error('Error fetching roles data:', error);
+            }
+        };
+    
+
 
 
     const columns = [// Definición de las columnas para una tabla, probablemente usando un componente de tabla como DataGrid
         { field: 'id', headerName: 'ID', width: 120 },// Columna para mostrar el código del producto
-
+        { field: 'nombre_clientes', headerName: 'Clientes', width: 220 },
+        
         { field: 'nombre_servicios', headerName: 'Servicio', width: 220 },// Columna para mostrar el nombre del proveedor del producto
         {
             // Columna para mostrar la fecha de compra del producto
@@ -88,34 +104,22 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
         { field: 'color', headerName: 'Color', width: 220 },// Columna para mostrar la descripción del producto
         
         { field: 'linea', headerName: 'Linea', width: 220 },// Columna para mostrar la cantidad de productos comprados
-        { field: 'precio', headerName: 'Precio', width: 220 },// Columna para mostrar el precio del producto
+
+        {
+            field: 'precio',
+            headerName: 'Precio',
+            width: 220,
+            renderCell: (params) => `Q. ${parseFloat(params.value).toFixed(2)}` // Formatear el precio
+        },
+        
+
+
+
       
         // Columna para mostrar las acciones (editar y eliminar) para cada fila de la tabla
-        {
-            field: '',
-            headerName: 'Acciones',
-            width: 200,
-            renderCell: (params) => (// Renderiza las acciones en una celda, usando 'renderCell' para definir el contenido personalizado
-                 // Usa Stack para alinear los botones de acción en una fila, separados por un Divider
-                <Stack direction='row' divider={<Divider orientation="vertical" flexItem />} justifyContent="center" alignItems="center" spacing={2}>
-                    {/* Botón para editar el producto */}
-                    <IconButton size='small' onClick={() => { 
-                        setIsEdit(true);// Cambia el estado a modo de edición
-                        setBody(params.row);// Coloca la fila actual en el estado 'body' para editar
-                        handleDialog();// Abre el diálogo de edición
-                    }}>
-                        <EditOutlined />{/* Ícono de edición */}
-                    </IconButton>
-                    {/* Botón para eliminar el producto */}
-                    <IconButton size='small' onClick={() => {
-                        handleDialogDelete();// Abre el diálogo de confirmación de eliminación
-                        setIdDelete(params.id); // Guarda el ID del producto a eliminar
-                    }}>
-                        <DeleteOutline /> {/* Ícono de eliminación */}
-                    </IconButton>
-                </Stack>
-            )
-        }
+       
+
+
     ];
 
 
@@ -214,23 +218,75 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
 
     const generatePDF = () => {// Función para generar el reporte PDF con todos los productos
         const doc = new jsPDF();// Crea una nueva instancia de jsPDF
-        doc.text("Reporte de Inventario", 20, 10);// Añade un título en la posición (20, 10) en la página
+        doc.text("Reporte de servicios vendidos", 20, 10);// Añade un título en la posición (20, 10) en la página
         doc.autoTable({// Utiliza el plugin autoTable de jsPDF para crear una tabla en el PDF
-            head: [['ID', 'Nombre', 'Descripción',  'Proveedor',  'Fecha Compra',  'Cantidad', 'Precio', 'Subtotal']],// Definición de la cabecera de la tabla con los nombres de las columnas
+            head: [['ID', 'Servicio', 'Fecha de Servicio',  'Marca',  'Modelo',  'Color', 'Linea', 'Precio']],// Definición de la cabecera de la tabla con los nombres de las columnas
             body: usuariosList.map(product => [ // El cuerpo de la tabla contiene los datos de la lista de productos 'usuariosList'
                 product.id, // ID del producto
-                product.nombre, // Nombre del producto
-                product.descripcion,// Descripción del producto
-                product.nombre_proveedor,// Nombre del proveedor
-                formatDate(product.fecha_compra),// Fecha de compra (formateada)
-               
-                product.cantidad, // Cantidad de productos
-                product.precio,// Precio unitario
-                product.subtotal// Subtotal (cantidad * precio)
+                product.nombre_servicios, // Nombre del producto
+                formatDate(product.fecha_servicio),// Fecha de compra (formateada)
+                product.marca,// Descripción del producto
+                product.modelo,// Nombre del proveedor
+                
+                product.color, // Cantidad de productos
+                product.linea,// Precio unitario
+                product.precio// Subtotal (cantidad * precio)
             ]) // Fin del body
         }); //Fin del doc
-        doc.save('reporte_inventario.pdf'); // Guarda el archivo PDF con el nombre 'reporte_inventario.pdf'
+        doc.save('reporte_servicios.pdf'); // Guarda el archivo PDF con el nombre 'reporte_inventario.pdf'
     };//Fin del reporte
+
+
+
+    const generateReceipt = () => {
+        const groupedServices = {};
+    
+        // Agrupamos los servicios por cliente y fecha
+        usuariosList.forEach(service => {
+            const key = `${service.nombre_clientes}-${formatDate(service.fecha_servicio)}`;
+            if (!groupedServices[key]) {
+                groupedServices[key] = {
+                    cliente: service.nombre_clientes,
+                    fecha: formatDate(service.fecha_servicio),
+                    servicios: [],
+                    total: 0,
+                };
+            }
+            groupedServices[key].servicios.push(service);
+            groupedServices[key].total += parseFloat(service.precio);
+        });
+    
+        // Crear PDF por cada grupo
+        for (let receiptKey in groupedServices) {
+            const { cliente, fecha, servicios, total } = groupedServices[receiptKey];
+    
+            const doc = new jsPDF();
+            doc.text(`Recibo de Servicios - Cliente: ${cliente}`, 20, 10);
+            doc.text(`Fecha: ${fecha}`, 20, 20);
+            
+            // Crear tabla de servicios
+            doc.autoTable({
+                head: [['ID', 'Servicio', 'Precio']],
+                body: servicios.map(service => [service.id, service.nombre_servicios, `Q. ${parseFloat(service.precio).toFixed(2)}`]),
+            });
+    
+            // Mostrar el total a pagar
+            doc.text(`Total a Pagar: Q. ${total.toFixed(2)}`, 20, doc.autoTable.previous.finalY + 10);
+            
+            // Guardar PDF
+            doc.save(`recibo_${cliente}_${fecha}.pdf`);
+        }
+    };
+
+
+
+
+
+
+
+
+
+
 
 
     
@@ -284,6 +340,7 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
         init();// Llama a la función init para obtener la lista de productos
         fetchProveedores();// Llama a la función fetchProveedores para obtener la lista de proveedores
         // Esta dependencia vacía significa que solo se ejecutará una vez al montar el componente
+        fetchRoless();
         // El efecto solo se ejecutará una vez, ya que el array de dependencias está vacío
     }, []);
 
@@ -317,7 +374,27 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
                 <DialogContent>
                     <Grid container spacing={2}>
 
+                  
+<Grid item xs={12} sm={6}>
+    <TextField
+        id="cliente" // Agrega un id único aquí
+        margin='normal'
+        name='nombre_clientes'
+        value={body.nombre_clientes}
+        onChange={onChange}
+        variant='outlined'
+        size='small'
+        color='primary'
+        fullWidth
+        label='Nombre del Cliente'
+    />
+    <InputLabel htmlFor="cliente">Cliente Vehículo</InputLabel> {/* Cambia el for para que coincida con el id */}
+</Grid>
 
+
+                    
+                    
+                    
                     <Grid item xs={12}>
                             {/* Etiqueta para el campo de selección de proveedor */}
                             <InputLabel htmlFor="id_servicios">Servicios</InputLabel>
@@ -460,7 +537,7 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
 
 
         
-            <Page title="FF| Inventario Productos">
+            <Page title="FF| Registro Servicios">
                  {/* Componente ToastAutoHide para mostrar mensajes de éxito o error */}
                 <ToastAutoHide message={mensaje} />
                  {/* Contenedor principal con un ancho máximo de 'lg' (large) */}
@@ -468,7 +545,7 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
                     {/* Box que aplica un padding-bottom (pb) de 5 unidades */}
                     <Box sx={{ pb: 5 }}>
                         {/* Título principal del módulo de inventario */}
-                        <Typography variant="h5">Inventario del Car Wash</Typography>
+                        <Typography variant="h5">Registro de Servicios del Car Wash</Typography>
                     </Box>
 
 
@@ -489,16 +566,24 @@ const Registros = () => {// Definición del componente funcional 'Inventario'
 
                         <Grid item xs={12} sm={3}>
                             {/* Botón para generar el reporte PDF general de inventario */}
-                            <Button onClick={generatePDF} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos</Button>
+                            <Button onClick={generatePDF} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Servicios</Button>
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             {/* Botón para generar el reporte PDF de productos "QuimicosDeLaEra" */}
-                            <Button onClick={generatePDFQuimicosDeLaEra} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos de QuimicosDeLaEra</Button>
+                           {/* <Button onClick={generatePDFQuimicosDeLaEra} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos de QuimicosDeLaEra</Button> */}
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             {/* Botón para generar el reporte PDF de productos "Quimicos FERKICA" */}
-                            <Button onClick={generatePDFFerkica} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos de Quimicos FERKICA</Button>
+                           {/* <Button onClick={generatePDFFerkica} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'> Informe General de Productos de Quimicos FERKICA</Button>*/}
                         </Grid>
+                        <Grid item xs={12} sm={3}>
+    {/* Botón para generar el informe de servicios agrupado por cliente y fecha */}
+    <Button onClick={generateReceipt} startIcon={<PictureAsPdfOutlined />} variant='contained' color='primary'>
+        Generar Recibos
+    </Button>
+</Grid>
+
+
                         <Grid item xs={12} sm={12}>
                             {/* Componente para mostrar la tabla con los datos de los productos */}
                             <CommonTable data={usuariosList} columns={columns} />
