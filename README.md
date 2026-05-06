@@ -1,15 +1,7 @@
 # 🚗 Sistema Web para Importadora de Vehículos y Carwash
 
-Este es un sistema web integral diseñado para gestionar las operaciones de una importadora de vehículos y los servicios de un carwash. La plataforma permite el control de inventario de autos, registro de clientes, gestión de citas de lavado y seguimiento de procesos administrativos.
+Este es un sistema web integral diseñado para gestionar las operaciones de una importadora de vehículos y los servicios de un carwash. 
 
-## 🚀 Tecnologías Utilizadas
-
-El proyecto fue desarrollado utilizando el stack MERN (o similar) para garantizar escalabilidad y rendimiento:
-
-* **Frontend:** React.js
-* **Backend:** Node.js con Express
-* **Base de Datos:** MySQL / PostgreSQL (Referenciado en carpeta `1. Base de datos`)
-* **Estilos:** CSS3 / Bootstrap (o Tailwind)
 
 ## 📸 Vista Previa del Sistema
 
@@ -58,7 +50,7 @@ Para conocer más a fondo el proyecto, puedes acceder a los siguientes enlaces:
     ```bash
     cd front0901
     npm install
-    npm start
+    npm run dev
     ```
 
 ---
