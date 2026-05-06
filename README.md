@@ -39,8 +39,7 @@ A continuación se presentan capturas de pantalla que muestran la interfaz y fun
 
 Para conocer más a fondo el proyecto, puedes acceder a los siguientes enlaces:
 
-* **[Ver Funcionamiento del Sistema](#)**: Haz clic aquí para ver una demostración de cómo el usuario final interactúa con la plataforma.
-* **[Ver Funcionamiento Técnico](#)**: Haz clic aquí para ver una explicación detallada de la arquitectura, endpoints de la API y lógica de negocio.
+* **[Ver Funcionamiento del Sistema](#)**: [Haz clic aquí para ver una demostración de cómo el usuario final interactúa con la plataforma.](https://drive.google.com/file/d/1Digc46E500C88tN5H8HONSsvr4jG7MLW/view?usp=sharing)
 
 ## 💻 Instalación y Configuración
 
@@ -62,4 +61,4 @@ Para conocer más a fondo el proyecto, puedes acceder a los siguientes enlaces:
     ```
 
 ---
-Desarrollado por [stevenjf23](https://github.com/stevenjf23)
+Desarrollado por Steven Flores
