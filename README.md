@@ -26,7 +26,6 @@ A continuación se presentan capturas de pantalla que muestran la interfaz y fun
   <img src="./0. imagenes readme/sistema16.png" width="400px" alt="Captura 16">
   <img src="./0. imagenes readme/sistema17.png" width="400px" alt="Captura 17">
   <img src="./0. imagenes readme/sistema18.png" width="400px" alt="Captura 18">
-  <img src="./0. imagenes readme/sistema19.png" width="400px" alt="Captura 19">
 </div>
 
 
